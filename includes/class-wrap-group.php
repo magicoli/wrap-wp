@@ -12,10 +12,10 @@ class WrapGroup {
     public static function init() {
         add_action('init', [self::class, 'create_group_taxonomy']);
         add_action('admin_menu', [self::class, 'add_admin_menu']);
-        add_action('group_add_form_fields', [self::class, 'add_group_user_field'], 10, 2);
-        add_action('group_edit_form_fields', [self::class, 'edit_group_user_field'], 10, 2);
-        add_action('edited_group', [self::class, 'save_group_user_field'], 10, 2);
-        add_action('create_group', [self::class, 'save_group_user_field'], 10, 2);
+        add_action('wrap-group_add_form_fields', [self::class, 'add_group_user_field'], 10, 2);
+        add_action('wrap-group_edit_form_fields', [self::class, 'edit_group_user_field'], 10, 2);
+        add_action('edited_wrap-group', [self::class, 'save_group_user_field'], 10, 2);
+        add_action('create_wrap-group', [self::class, 'save_group_user_field'], 10, 2);
         add_action('admin_enqueue_scripts', [self::class, 'enqueue_select2']);
     }
 
@@ -29,7 +29,7 @@ class WrapGroup {
             'parent_item_colon' => __('Parent Group:', 'wrap'),
             'edit_item' => __('Edit Group', 'wrap'),
             'update_item' => __('Update Group', 'wrap'),
-            'add_new_item' => __('Add New Group', 'wrap'),
+            'add_new_item' => __('Add Group', 'wrap'),
             'new_item_name' => __('New Group Name', 'wrap'),
             'menu_name' => __('Groups', 'wrap'),
         );
@@ -52,7 +52,7 @@ class WrapGroup {
 
     public static function add_group_user_field($taxonomy) {
         ?>
-        <div class="form-field term-group">
+        <div class="form-field term-wrap-group">
             <label for="group_users"><?php _e('Allowed users', 'wrap'); ?></label>
             <select multiple="multiple" name="group_users[]" id="group_users" class="postform select2">
                 <?php
@@ -69,7 +69,7 @@ class WrapGroup {
     public static function edit_group_user_field($term, $taxonomy) {
         $group_users = get_term_meta($term->term_id, 'group_users', true);
         ?>
-        <tr class="form-field term-group-wrap">
+        <tr class="form-field term-wrap-group">
             <th scope="row"><label for="group_users"><?php _e('Allowed users', 'wrap'); ?></label></th>
             <td>
                 <select multiple="multiple" name="group_users[]" id="group_users" class="postform select2">
