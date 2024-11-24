@@ -8,6 +8,10 @@
 # Some commands are commented out for further development. Do not remove them.
 
 class WrapAuth {
+    public static function init() {
+        add_action('template_redirect', [self::class, 'check_access']);
+    }
+
     public static function check_access() {
         // Vérifier si l'utilisateur est connecté
         if (!is_user_logged_in()) {

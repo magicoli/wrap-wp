@@ -36,7 +36,10 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Inclure le fichier de la classe WrapAuth
-require_once plugin_dir_path(__FILE__) . 'class-wrap-auth.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-settings.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-client.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-auth.php';
 
-// Hook the validation function to the request handling
-add_action('template_redirect', ['WrapAuth', 'check_access']);
+// Initialiser les classes
+WrapSettings::init();
+WrapAuth::init();
