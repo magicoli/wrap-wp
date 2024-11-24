@@ -15,7 +15,8 @@ class WrapSettings {
     }
 
     public static function add_admin_menu() {
-        add_options_page(__('WRAP Settings', 'magiiic-wrap'), 'WRAP', 'manage_options', 'wrap', [self::class, 'options_page']);
+        add_menu_page(__('WRAP', 'magiiic-wrap'), 'WRAP', 'manage_options', 'wrap', [self::class, 'options_page'], 'dashicons-admin-generic');
+        add_submenu_page('wrap', __('WRAP Settings', 'magiiic-wrap'), __('Settings', 'magiiic-wrap'), 'manage_options', 'wrap', [self::class, 'options_page']);
     }
 
     public static function settings_init() {
@@ -79,6 +80,7 @@ class WrapSettings {
                     add_settings_error(
                         'wrap_base_url',
                         'wrap_base_url_error',
+                        # This message appears below the field, so it's not necessary to specify "WRAP:"
                         __('The URL is properly formatted but not reachable.', 'magiiic-wrap'),
                         'error'
                     );
@@ -88,7 +90,8 @@ class WrapSettings {
                 add_settings_error(
                     'wrap_base_url',
                     'wrap_base_url_error',
-                    __('WRAP Invalid URL. Please enter a valid URL.', 'magiiic-wrap'),
+                    # Keep "WRAP:" in the message, it appears abofe the page and it's annoying to have a message not knowing which plugin sent it
+                    __('WRAP: Invalid URL. Please enter a valid URL.', 'magiiic-wrap'),
                     'error'
                 );
             }

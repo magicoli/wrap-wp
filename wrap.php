@@ -35,11 +35,12 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-// Inclure le fichier de la classe WrapAuth
+// Include classes
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-settings.php';
-require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-client.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-group.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-auth.php';
 
-// Initialiser les classes
+// Initialise classes
 WrapSettings::init();
+WrapGroup::init();
 WrapAuth::init();
