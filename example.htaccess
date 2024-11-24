@@ -1,5 +1,5 @@
-RewriteEngine On
-
-# Rediriger les utilisateurs non authentifiés vers WordPress pour l'authentification
-RewriteCond %{HTTP_COOKIE} !wordpress_logged_in_
-RewriteRule ^(.*)$ https://wrap.rocks/wp-login.php?redirect_to=%{REQUEST_URI} [L,R=302]
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_COOKIE} !wordpress_logged_in_
+  RewriteRule ^(.*)$ https://wrap.rocks/w/wp-login.php?redirect_to=%{REQUEST_SCHEME}://%{HTTP_HOST}%{REQUEST_URI} [L,R=302]
+</IfModule>

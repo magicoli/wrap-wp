@@ -22,7 +22,7 @@
  * <IfModule mod_rewrite.c>
  *   RewriteEngine On
  *   RewriteCond %{HTTP_COOKIE} !wordpress_logged_in_
- *   RewriteRule ^(.*)$ https://yourdomain.org/wp-login.php?redirect_to=%{REQUEST_URI} [L,R=302]
+ *     RewriteRule ^(.*)$ https://yourdomain.org/wp-login.php?redirect_to=https://%{HTTP_HOST}%{REQUEST_URI} [L,R=302]
  * </IfModule>
  * 
 **/
@@ -39,13 +39,15 @@ if ( ! defined( 'WPINC' ) ) {
 function wp_webapp_check_access() {
     // Vérifier si l'utilisateur est connecté
     if (!is_user_logged_in()) {
-        wp_redirect(wp_login_url());
+        $redirect_to = urlencode($_GET['redirect_to'] ?? '/');
+        error_log('WRAP auth redirect_to: ' . $redirect_to);
+        wp_redirect(wp_login_url($redirect_to));
         exit;
     }
 
     // Basic check, allow access to any logged in user
     $user = wp_get_current_user();
-    if(is_error($user)) {
+    if (!$user) {
         wp_die('You do not have permission to access this resource.');
     }
 
