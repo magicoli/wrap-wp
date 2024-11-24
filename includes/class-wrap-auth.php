@@ -16,7 +16,6 @@ class WrapAuth {
         // Vérifier si l'utilisateur est connecté
         if (!is_user_logged_in()) {
             $redirect_to = urlencode($_GET['redirect_to'] ?? '/');
-            error_log('WRAP auth redirect_to: ' . $redirect_to);
             wp_redirect(wp_login_url($redirect_to));
             exit;
         }
