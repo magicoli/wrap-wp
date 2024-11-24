@@ -17,6 +17,8 @@ class WrapGroup {
         add_action('edited_wrap-group', [self::class, 'save_group_user_field'], 10, 2);
         add_action('create_wrap-group', [self::class, 'save_group_user_field'], 10, 2);
         add_action('admin_enqueue_scripts', [self::class, 'enqueue_select2']);
+
+        add_filter('parent_file', [ self::class, 'set_current_menu'] );
     }
 
     public static function create_group_taxonomy() {
@@ -29,7 +31,7 @@ class WrapGroup {
             'parent_item_colon' => __('Parent Group:', 'wrap'),
             'edit_item' => __('Edit Group', 'wrap'),
             'update_item' => __('Update Group', 'wrap'),
-            'add_new_item' => __('Add Group', 'wrap'),
+            'add_new_item' => __('Add New Group', 'wrap'),
             'new_item_name' => __('New Group Name', 'wrap'),
             'menu_name' => __('Groups', 'wrap'),
         );
@@ -43,11 +45,20 @@ class WrapGroup {
             'rewrite' => array('slug' => 'wrap-group'),
         );
 
-        register_taxonomy('wrap-group', array('post'), $args);
+        register_taxonomy('wrap-group', array(), $args);
     }
 
     public static function add_admin_menu() {
         add_submenu_page('wrap', __('Groups', 'magiiic-wrap'), __('Groups', 'magiiic-wrap'), 'manage_options', 'edit-tags.php?taxonomy=wrap-group');
+    }
+
+    public static function set_current_menu( $parent_file ) {
+        global $submenu_file, $current_screen, $pagenow;
+        if($pagenow == 'edit-tags.php' && $current_screen->taxonomy == 'wrap-group') {
+            $parent_file = 'wrap';
+            $submenu_file = 'edit-tags.php?taxonomy=wrap-group';
+        }
+        return $parent_file;
     }
 
     public static function add_group_user_field($taxonomy) {
