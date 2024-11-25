@@ -54,7 +54,7 @@ class WrapGroup {
 
     public static function set_current_menu( $parent_file ) {
         global $submenu_file, $current_screen, $pagenow;
-        if($pagenow == 'edit-tags.php' && $current_screen->taxonomy == 'wrap-group') {
+        if( ($pagenow == 'edit-tags.php' || $pagenow == 'term.php') && $current_screen->taxonomy == 'wrap-group') {
             $parent_file = 'wrap';
             $submenu_file = 'edit-tags.php?taxonomy=wrap-group';
         }
@@ -65,7 +65,7 @@ class WrapGroup {
         ?>
         <div class="form-field term-wrap-group">
             <label for="group_users"><?php _e('Allowed users', 'wrap'); ?></label>
-            <select multiple="multiple" name="group_users[]" id="group_users" class="postform select2">
+            <select multiple="multiple" name="group_users[]" id="group_users" class="postform select2 full-width">
                 <?php
                 $users = get_users();
                 foreach ($users as $user) {
@@ -95,6 +95,16 @@ class WrapGroup {
             </td>
         </tr>
         <?php
+        $htaccess_rules = WrapAuth::htaccess_rules($term->slug);
+        ?>
+        <tr class="form-field term-wrap-group">
+            <th scope="row"><label><?php _e('HTAccess rules', 'wrap'); ?></label></th>
+            <td>
+                <textarea readonly rows="10" cols="50" class="large-text code"><?php echo esc_textarea($htaccess_rules); ?></textarea>
+                <p class="description"><?php _e('Copy these rules and paste them into your .htaccess file for this group.', 'wrap'); ?></p>
+            </td>
+        </tr>
+        <?php
     }
 
     public static function save_group_user_field($term_id, $tt_id) {
@@ -108,6 +118,7 @@ class WrapGroup {
     public static function enqueue_select2() {
         wp_enqueue_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), '4.1.0', true);
         wp_enqueue_style('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0');
+        wp_enqueue_style('wrap-admin-styles', plugin_dir_url(__FILE__) . '/css/admin-styles.css', array(), '1.0.0');
         wp_add_inline_script('select2', 'jQuery(document).ready(function($) { $(".select2").select2(); });');
     }
 }

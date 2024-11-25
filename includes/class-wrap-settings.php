@@ -116,7 +116,9 @@ class WrapSettings {
             $url = rtrim(esc_url_raw($input['wrap_base_url']), '/');
             if (filter_var($url, FILTER_VALIDATE_URL)) {
                 $output['wrap_base_url'] = $url;
-                if (!self::url_exists($url)) {
+                if (self::url_exists($url)) {
+                    delete_option('wrap_base_url_error');
+                } else {
                     add_settings_error(
                         'wrap_settings',
                         'wrap_base_url_error',
@@ -132,13 +134,13 @@ class WrapSettings {
                     __('WRAP: Invalid URL. Please enter a valid URL.', 'magiiic-wrap'),
                     'error'
                 );
+                update_option('wrap_base_url_error', true);
             }
         }
         if (!empty($input['wrap_base_path'])) {
             $path = rtrim(sanitize_text_field($input['wrap_base_path']), '/');
             $output['wrap_base_path'] = $path;
             if (!self::path_exists($path)) {
-                error_log('Path does not exist: ' . $path);
                 add_settings_error(
                     'wrap_settings',
                     'wrap_base_path_error',
