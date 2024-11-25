@@ -125,7 +125,7 @@ class WrapAuth {
      * @param string $group Group slug
      * @return string .htaccess rules
      */
-    public static function htaccess_rules($group) {
+    public static function build_htaccess_rules($group) {
         // Check if group is valid
         $term = get_term_by('slug', $group, 'wrap-group');
         if (!$term) {
@@ -138,7 +138,7 @@ class WrapAuth {
         $rules = "<IfModule mod_rewrite.c>\n";
         $rules .= "  RewriteEngine On\n";
         $rules .= "  RewriteCond %{HTTP_COOKIE} !wrap_auth_$group=1\n";
-        $rules .= "  RewriteRule ^(.*)$ " . esc_url($site_home . "/wrap-auth?redirect_to=%{REQUEST_SCHEME}://%{HTTP_HOST}%{REQUEST_URI}") . " [L,R=302]\n";
+        $rules .= "  RewriteRule ^(.*)$ " . $site_home . "/wrap-auth/?redirect_to=%{REQUEST_SCHEME}://%{HTTP_HOST}%{REQUEST_URI}" . " [L,R=302]\n";
         $rules .= "</IfModule>\n";
 
         return $rules;

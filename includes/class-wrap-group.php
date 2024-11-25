@@ -95,13 +95,13 @@ class WrapGroup {
             </td>
         </tr>
         <?php
-        $htaccess_rules = WrapAuth::htaccess_rules($term->slug);
+        $htaccess_rules = WrapAuth::build_htaccess_rules($term->slug);
         ?>
         <tr class="form-field term-wrap-group">
-            <th scope="row"><label><?php _e('HTAccess rules', 'wrap'); ?></label></th>
+            <th scope="row"><label><?php _e('.htaccess rules', 'wrap'); ?></label></th>
             <td>
                 <textarea readonly rows="10" cols="50" class="large-text code"><?php echo esc_textarea($htaccess_rules); ?></textarea>
-                <p class="description"><?php _e('Copy these rules and paste them into your .htaccess file for this group.', 'wrap'); ?></p>
+                <p class="description"><?php _e('Copy these rules and paste them into your .htaccess file of your group\'s main folder.', 'wrap'); ?></p>
             </td>
         </tr>
         <?php
