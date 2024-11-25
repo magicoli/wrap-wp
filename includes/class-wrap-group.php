@@ -67,8 +67,8 @@ class WrapGroup {
 
     public static function add_group_user_field($taxonomy) {
         ?>
-        <div class="form-field term-wrap-group">
-            <label for="group_users"><?php _e('Allowed users', 'wrap'); ?></label>
+        <div class="form-field term-wrap-group ">
+            <label for="group_users"><?php _e('Allow authentication', 'wrap'); ?></label>
             <select multiple="multiple" name="group_users[]" id="group_users" class="postform select2 full-width">
                 <?php
                 $users = get_users();
@@ -82,10 +82,15 @@ class WrapGroup {
     }
 
     public static function edit_group_user_field($term, $taxonomy) {
+        WrapAdminSidebar::add_sidebar(array(
+            'main_selector' => 'form.validate',
+            'page' => 'term.php',
+            'taxonomy' => 'wrap-group'
+        ));
         $group_users = get_term_meta($term->term_id, 'group_users', true);
         ?>
         <tr class="form-field term-wrap-group">
-            <th scope="row"><label for="group_users"><?php _e('Allowed users', 'wrap'); ?></label></th>
+            <th scope="row"><label for="group_users"><?php _e('Allow authentication', 'wrap'); ?></label></th>
             <td>
                 <select multiple="multiple" name="group_users[]" id="group_users" class="postform select2">
                     <?php
@@ -101,13 +106,11 @@ class WrapGroup {
         <?php
         $htaccess_rules = WrapAuth::build_htaccess_rules($term->slug);
         ?>
-        <tr class="form-field term-wrap-group">
-            <th scope="row"><label><?php _e('.htaccess rules', 'wrap'); ?></label></th>
-            <td>
+        <div class='wrap-admin-sidebar'>
+                <label><?php _e('.htaccess rules', 'wrap'); ?></label>
                 <textarea readonly rows="10" cols="50" class="large-text code"><?php echo esc_textarea($htaccess_rules); ?></textarea>
                 <p class="description"><?php _e('Copy these rules and paste them into your .htaccess file of your group\'s main folder.', 'wrap'); ?></p>
-            </td>
-        </tr>
+        </div>
         <?php
     }
 

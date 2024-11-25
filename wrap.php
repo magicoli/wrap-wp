@@ -13,7 +13,7 @@
  * Requires at least: 5.2
  * Requires PHP: 7.2
  * 
- * @package wrap-auth
+ * @package wrap
  * @version 0.1.0-dev
  * 
  * A very minimal plugin to provide authentication for external applications via their .htaccess
@@ -36,21 +36,24 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 function wrap_enqueue_frontend_styles() {
-    wp_enqueue_style('wrap-styles', plugin_dir_url(__FILE__) . 'css/styles.css', array(), '1.0.1');
+    wp_enqueue_style('wrap-styles', plugin_dir_url(__FILE__) . 'css/styles.css', array(), '1.0.3');
 }
 add_action('wp_enqueue_scripts', 'wrap_enqueue_frontend_styles');
 function wrap_enqueue_admin_styles() {
-    wp_enqueue_style('wrap-admin-styles', plugin_dir_url(__FILE__) . 'css/admin-styles.css', array(), '1.0.1');
+    wp_enqueue_style('wrap-admin-styles', plugin_dir_url(__FILE__) . 'css/admin-styles.css', array(), '1.0.3');
 }
 add_action('admin_enqueue_scripts', 'wrap_enqueue_admin_styles');
 
 // Include classes
+require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-admin-sidebar.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-settings.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-user.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-group.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-auth.php';
 
+
 // Initialise classes
+WrapAdminSidebar::init(); // No really necessary for this class at this time
 WrapSettings::init();
 WrapUser::init();
 WrapGroup::init();
