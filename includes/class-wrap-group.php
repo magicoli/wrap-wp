@@ -18,7 +18,11 @@ class WrapGroup {
         add_action('create_wrap-group', [self::class, 'save_group_user_field'], 10, 2);
         add_action('admin_enqueue_scripts', [self::class, 'enqueue_select2']);
 
-        add_filter('parent_file', [ self::class, 'set_current_menu'] );
+        add_filter('parent_file', [self::class, 'set_current_menu']);
+
+        // Ajouter les hooks pour les colonnes personnalisées
+        add_filter('manage_edit-wrap-group_columns', [self::class, 'add_group_columns']);
+        add_action('manage_wrap-group_custom_column', [self::class, 'fill_group_columns'], 10, 3);
     }
 
     public static function create_group_taxonomy() {
@@ -120,6 +124,56 @@ class WrapGroup {
         wp_enqueue_style('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0');
         wp_enqueue_style('wrap-admin-styles', plugin_dir_url(__FILE__) . '/css/admin-styles.css', array(), '1.0.0');
         wp_add_inline_script('select2', 'jQuery(document).ready(function($) { $(".select2").select2(); });');
+    }
+
+    /**
+     * Ajouter des colonnes personnalisées à la taxonomie wrap-group
+     *
+     * @param array $columns Colonnes existantes.
+     * @return array Colonnes modifiées.
+     */
+    public static function add_group_columns($columns) {
+        // Insérer la nouvelle colonne après la colonne 'name'
+        $new_columns = [];
+        foreach ($columns as $key => $value) {
+            $new_columns[$key] = $value;
+            if ($key === 'name') {
+                $new_columns['group_users'] = __('Allowed Users', 'wrap');
+            }
+        }
+        return $new_columns;
+    }
+
+    /**
+     * Remplir les colonnes personnalisées de la taxonomie wrap-group
+     *
+     * @param string $content Contenu à afficher dans la colonne.
+     * @param string $column_name Nom de la colonne.
+     * @param int $term_id ID du terme.
+     */
+    public static function fill_group_columns($content, $column_name, $term_id) {
+        if ($column_name === 'group_users') {
+            $group_users = get_term_meta($term_id, 'group_users', true);
+            if (!empty($group_users) && is_array($group_users)) {
+                $users = get_users(['include' => $group_users]);
+                if ($users) {
+                    $user_names = array_map(function($user) {
+                        // if connected user can edit users, return $user->display_name as a link to user's profile, otherwise plain text
+                        if (current_user_can('edit_users')) {
+                            return sprintf('<a href="%s">%s</a>', get_edit_user_link($user->ID), $user->display_name);
+                        } else {
+                            return $user->display_name;
+                        }
+                    }, $users);
+                    $content = implode(', ', $user_names);
+                } else {
+                    $content = '—';
+                }
+            } else {
+                $content = '—';
+            }
+        }
+        return $content;
     }
 }
 
