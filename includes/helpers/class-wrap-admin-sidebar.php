@@ -33,8 +33,9 @@ class WrapAdminSidebar {
             return;
         }
 
-        wp_enqueue_style('wrap-admin-sidebar', plugin_dir_url(__DIR__) . 'css/admin-sidebar.css', array(), '1.0.0');
-        wp_enqueue_script('wrap-admin-sidebar-script', plugin_dir_url(__DIR__) . 'js/admin-sidebar.js', array('jquery'), '1.0.0', true);
+        error_log('css url: ' . WRAP_PLUGIN_URL . 'css/admin-sidebar.css');
+        wp_enqueue_style('wrap-admin-sidebar', WRAP_PLUGIN_URL . 'css/admin-sidebar.css', array(), '1.0.0');
+        wp_enqueue_script('wrap-admin-sidebar-script', WRAP_PLUGIN_URL . 'js/admin-sidebar.js', array('jquery'), '1.0.0', true);
         wp_add_inline_script('wrap-admin-sidebar-script', '
         jQuery(document).ready(function($){
             // Vérifier si la sidebar n\'existe pas déjà

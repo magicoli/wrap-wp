@@ -125,7 +125,7 @@ class WrapGroup {
     public static function enqueue_select2() {
         wp_enqueue_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), '4.1.0', true);
         wp_enqueue_style('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0');
-        wp_enqueue_style('wrap-admin-styles', plugin_dir_url(__FILE__) . '/css/admin-styles.css', array(), '1.0.0');
+        wp_enqueue_style('wrap-admin-styles', WRAP_PLUGIN_URL . 'css/admin-styles.css', array(), '1.0.0');
         wp_add_inline_script('select2', 'jQuery(document).ready(function($) { $(".select2").select2(); });');
     }
 
