@@ -35,12 +35,23 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
+function wrap_enqueue_frontend_styles() {
+    wp_enqueue_style('wrap-styles', plugin_dir_url(__FILE__) . 'css/styles.css', array(), '1.0.1');
+}
+add_action('wp_enqueue_scripts', 'wrap_enqueue_frontend_styles');
+function wrap_enqueue_admin_styles() {
+    wp_enqueue_style('wrap-admin-styles', plugin_dir_url(__FILE__) . 'css/admin-styles.css', array(), '1.0.1');
+}
+add_action('admin_enqueue_scripts', 'wrap_enqueue_admin_styles');
+
 // Include classes
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-settings.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-user.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-group.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-wrap-auth.php';
 
 // Initialise classes
 WrapSettings::init();
+WrapUser::init();
 WrapGroup::init();
 WrapAuth::init();
