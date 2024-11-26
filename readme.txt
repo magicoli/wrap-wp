@@ -1,15 +1,16 @@
-=== Wrap Tmp ===
+=== W.R.A.P. - Web Reel Automated Publishing ===
 Contributors: magicoli69
 Donate link: http://magiiic.com/support/wrap
 Tags: team, groups, authentication
 Requires at least: 
 Tested up to: 6.7.1
-Requires PHP: 6.0
+Requires at least: 4.6
+Requires PHP: 5.5
 Stable tag: 0.1.0
 License: AGPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
-Authentication for W.R.A.P. (WordPress REST API Proxy)
+WordPress-based authentication for third-party applications via .htaccess
 
 == Description ==
 
@@ -43,17 +44,17 @@ Here is an example of how your file structure might look:
 ```
 /var/www/html/
 ├── wp/ # WordPress installed in a subdirectory
-│ ├── wp-content/
-│ └── ...
+│   ├── wp-content/
+│   └── ...
 ├── group1/ # Third-party application protected group
-│ ├── .htaccess # Authentication rules for group1
-│ ├── project1/
-│ └── project2/
+│   ├── .htaccess # Authentication rules for group1
+│   ├── project1/
+│   └── project2/
 ├── group2/ # Third-party application public group
-│ ├── project1/
-│ ├── project2/
-│ └── private/ # Protected subdirectory
-│ └── .htaccess # Authentication rules subdirectory
+│   ├── project1/
+│   ├── project2/
+│   └── private/ # Protected subdirectory
+│   └── .htaccess # Authentication rules subdirectory
 └── ...
 ```
 
