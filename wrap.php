@@ -3,15 +3,11 @@
  * Plugin Name: W.R.A.P. - Web Reel Automated Publishing
  * Plugin URI: https://wrap.rocks/
  * Description: Authentication for W.R.A.P. (WordPress REST API Proxy)
- * Version: 0.1.0-dev
  * Author: Olivier van Helden
  * Author URI: https://magiiic.media/
- * License: AGPL-3.0
- * License URI: https://www.gnu.org/licenses/agpl-3.0.html
  * Text Domain: magiiic-wrap
  * Domain Path: /languages
- * Requires at least: 5.2
- * Requires PHP: 7.2
+ * Version: 0.1.0-dev
  * 
  * @package wrap
  * 

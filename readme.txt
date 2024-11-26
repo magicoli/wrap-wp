@@ -1,115 +1,104 @@
 === Wrap Tmp ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: https://example.com/
-Tags: comments, spam
-Requires at least: 4.5
+Contributors: magicoli69
+Donate link: http://magiiic.com/support/wrap
+Tags: team, groups, authentication
+Requires at least: 
 Tested up to: 6.7.1
-Requires PHP: 5.6
+Requires PHP: 6.0
 Stable tag: 0.1.0
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License: AGPL-3.0-or-later
+License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Authentication for W.R.A.P. (WordPress REST API Proxy)
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+The W.R.A.P. plugin is a complement to [W.R.A.P. by Magiiic](https://wrap.rocks) platform, an online video-centric publishing service that includes fast processing, optimized streaming, editing, and organizing of provided content.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+This plugin serves as the administration tool for the service, allowing the management of user authentication on the external platform, groups (clients, companies, etc.), and projects.
 
-A few notes about the sections above:
+Although the plugin was created to complement a specific application, it has been designed generically to adapt to other third-party applications, assuming they are based on the use of subdirectories of the website.
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+== Features ==
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+At this stage, the service provides:
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+* **Authentication API**: Manage user authentication on the external platform, allowing a standalone application to benefit from WordPress user management.
+* **Group Management**: Organize users into groups (could be clients, companies, etc.) and manage their access.
+
+== Roadmap ==
+* **Project Management**: Assign new projects to groups, show projects on group page.
+* **Full Wrap libary**: Integrate the current standalone Wrap project into the plugin.
+
+== Requirements ==
+
+* **A third-party web application or a part of the website not handled by WordPress**, relying on document root subfolders.
+* **WordPress should be installed in a subdirectory**. Although not mandatory, a subfolder is a better approach for clarity and maintenance.
+
+This ensures that WordPress handles only the calls to its own structure and permalinks, while existing folders and files outside the WordPress directory are handled directly by the web server or the third-party application.
+
+== Example File Structure ==
+
+Here is an example of how your file structure might look:
+```
+/var/www/html/
+├── wp/ # WordPress installed in a subdirectory
+│ ├── wp-content/
+│ └── ...
+├── group1/ # Third-party application protected group
+│ ├── .htaccess # Authentication rules for group1
+│ ├── project1/
+│ └── project2/
+├── group2/ # Third-party application public group
+│ ├── project1/
+│ ├── project2/
+│ └── private/ # Protected subdirectory
+│ └── .htaccess # Authentication rules subdirectory
+└── ...
+```
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+1. Upload the plugin files to the `wp-content/plugins/wrap` directory, and activate as usual plugins.
+2. Go to Admin->WRAP->Settings screen to set the base URL of your external app (could be http://yourdomain.org/ or http://yourdomain.org/myapp/), and its local path (/var/www/html/ or /var/www/html/myapp/).
+3. Create groups, and assign allowed WP users.
+4. In the folders you want authentication, add a `.htaccess` file with the rules provided in the related group edit page, or adjust the example here:
+    ```.htaccess
+    <IfModule mod_rewrite.c>
+      RewriteEngine On
+      RewriteCond %{HTTP_COOKIE} !wrap_auth_your-group=1
+      RewriteRule ^(.*)$ https://yourdomain.org/wrap-auth/?redirect_to=%{REQUEST_SCHEME}://%{HTTP_HOST}%{REQUEST_URI} [L,R=302]
+    </IfModule>
+    ```
+    The first part of the URL must match an existing group, but the `.htaccess` file can be anywhere inside this group path (e.g., you can either protect the whole yourdomain.org/group1/ subsite, or leave it public and restrict access only to yourdomain.org/group1/private/).
 
-e.g.
+== Usage ==
 
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+Users visiting a page of the third-party app will be redirected if needed to the WP login page, and brought back to the page requested on success, otherwise get an error message.
 
-== Frequently Asked Questions ==
+WordPress users have a profile page, where they can see the groups they belong to.
 
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
-
-== Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
 
 == Changelog ==
 
 = 1.0 =
-* A change since the previous version.
-* Another change.
+* Initial release
+* third-party app autentication
+* groups creation and management
+* assign wp users to groups
+* personal profile page with assigned groups
 
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
 
-== Upgrade Notice ==
+== Frequently Asked Questions ==
 
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
+* Can I use this plugin to authenticate a third-party app that doesn't rely on local folders?
 
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
+    No. That's not the purpose of this plugin. There are many extensions and libraries to share authentication between different platforms.
 
-== Arbitrary section ==
+* Must the third-party app be part of the same website?
 
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
+    Yes, the plugin relies on same-site cookies.
 
-== A brief Markdown Example ==
+* Can I install WordPress in a subfolder and still let it manage the main website?
 
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](https://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: https://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+    Yes, WordPress can be installed in a subfolder and still handle the site as if it was in the root folder. See WordPress documentation for details.
