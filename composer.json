@@ -1,0 +1,20 @@
+{
+    "name": "magicoli/wrap",
+    "description": "WordPress-based authentication for third-party applications via .htaccess",
+    "type": "wordpress-plugin",
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Olivier van Helden",
+            "email": "olivier@van-helden.net"
+        }
+    ],
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

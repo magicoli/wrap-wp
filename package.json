@@ -1,7 +1,7 @@
 {
   "name": "wrap",
-  "description": "The W.R.A.P. plugin is a complement to [W.R.A.P. by Magiiic](https://wrap.rocks) platform, an online video-centric publishing service that includes fast processing, optimized streaming, editing, and organizing of provided content.",
-  "version": "1.0.0",
+  "description": "WordPress-based authentication for third-party applications via .htaccess",
+  "version": "0.1.0-dev",
   "main": "index.js",
   "repository": {
     "type": "git",

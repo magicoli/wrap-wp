@@ -4,13 +4,12 @@
 .apdisk
 .DS_Store
 htaccess
-node_modules/
-.DS_Store
+/node_modules/
 phpcs.xml
 phpunit.xml
-Thumbs.db
-wp-cli.local.yml
-node_modules/
 *.sql
 *.tar.gz
+Thumbs.db
+/vendor/
+wp-cli.local.yml
 *.zip
