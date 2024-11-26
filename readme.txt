@@ -6,7 +6,7 @@ Requires at least:
 Tested up to: 6.7.1
 Requires at least: 4.6
 Requires PHP: 5.5
-Stable tag: 0.1.0
+Stable tag: 1.0.0
 License: AGPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -82,7 +82,7 @@ WordPress users have a profile page, where they can see the groups they belong t
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.0 =
 * Initial release
 * third-party app autentication
 * groups creation and management

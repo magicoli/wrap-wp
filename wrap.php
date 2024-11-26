@@ -9,7 +9,7 @@
  * Domain Path: /languages
  * License: AGPL-3.0-or-later
  * License URI: https://www.gnu.org/licenses/agpl-3.0.html
- * Version: 0.1.0
+ * Version: 1.0.0
  *
  * @package wrap
  *
@@ -32,7 +32,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Constants
-define( 'WRAP_VERSION', '0.1.0' );
+define( 'WRAP_VERSION', '1.0.0' );
 define( 'WRAP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WRAP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

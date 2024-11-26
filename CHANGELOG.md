@@ -1,6 +1,6 @@
 ## Changelog
 
-### 1.0
+### 1.0.0
 * Initial release
 * third-party app autentication
 * groups creation and management
