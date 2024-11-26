@@ -1,0 +1,22 @@
+{
+  "name": "wrap",
+  "description": "The W.R.A.P. plugin is a complement to [W.R.A.P. by Magiiic](https://wrap.rocks) platform, an online video-centric publishing service that includes fast processing, optimized streaming, editing, and organizing of provided content.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@git.magiiic.com:wordpress/plugins/wrap.git"
+  },
+  "author": "Olivier van Helden",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "start": "grunt default",
+    "readme": "grunt readme",
+    "i18n": "grunt i18n"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-wp-i18n": "~0.5.0",
+    "grunt-wp-readme-to-markdown": "~1.0.0"
+  }
+}
