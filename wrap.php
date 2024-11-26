@@ -14,15 +14,14 @@
  * Requires PHP: 7.2
  * 
  * @package wrap
- * @version 0.1.0-dev
  * 
  * A very minimal plugin to provide authentication for external applications via their .htaccess
  *
  * Add these lines in your external site's .htaccess file:
  * <IfModule mod_rewrite.c>
  *   RewriteEngine On
- *   RewriteCond %{HTTP_COOKIE} !wordpress_logged_in_
- *     RewriteRule ^(.*)$ https://yourdomain.org/wp-login.php?redirect_to=%{REQUEST_SCHEME}://%{HTTP_HOST}%{REQUEST_URI} [L,R=302]
+ *   RewriteCond %{HTTP_COOKIE} !wrap_auth_your-group=1
+ *     RewriteRule ^(.*)$ https://yourdomain.org/wrap-auth/?redirect_to=%{REQUEST_SCHEME}://%{HTTP_HOST}%{REQUEST_URI} [L,R=302]
  * </IfModule>
  * 
 **/
