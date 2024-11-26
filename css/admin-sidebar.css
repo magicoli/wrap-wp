@@ -1,21 +1,21 @@
 .wrap-admin-sidebar-parent {
-    display: flex;
-    gap: 20px;
+	display: flex;
+	gap: 20px;
 
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: flex-start;
 }
 
 .wrap-admin-sidebar-parent > .wrap-admin-sidebar-main {
-    flex: 1;
+	flex: 1;
 }
 .wrap-admin-sidebar-parent > .wrap-admin-sidebar {
-    min-width: 300px;
+	min-width: 300px;
 }
 
 @media screen and (max-width: 768px) {
-    .wrap-admin-sidebar-parent {
-        flex-direction: column;
-    }
+	.wrap-admin-sidebar-parent {
+		flex-direction: column;
+	}
 }
