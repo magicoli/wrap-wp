@@ -1,7 +1,7 @@
 {
   "name": "wrap",
   "description": "WordPress-based authentication for third-party applications via .htaccess",
-  "version": "0.1.0-dev",
+  "version": "0.1.0",
   "main": "index.js",
   "repository": {
     "type": "git",
