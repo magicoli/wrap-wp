@@ -30,17 +30,17 @@ Here is an example of how your file structure might look:
 ```
 /var/www/html/
 ├── wp/ # WordPress installed in a subdirectory
-│ ├── wp-content/
-│ └── ...
+│   ├── wp-content/
+│   └── ...
 ├── group1/ # Third-party application protected group
-│ ├── .htaccess # Authentication rules for group1
-│ ├── project1/
-│ └── project2/
+│   ├── .htaccess # Authentication rules for group1
+│   ├── project1/
+│   └── project2/
 ├── group2/ # Third-party application public group
-│ ├── project1/
-│ ├── project2/
-│ └── private/ # Protected subdirectory
-│ └── .htaccess # Authentication rules subdirectory
+│   ├── project1/
+│   ├── project2/
+│   └── private/ # Protected subdirectory
+│   └── .htaccess # Authentication rules subdirectory
 └── ...
 ```
 
