@@ -41,7 +41,7 @@ class WrapSettings {
 
 		add_settings_field(
 			'wrap_base_url',
-			__( 'External Site Base URL', 'wrap' ),
+			__( 'Third-party app Base URL', 'wrap' ),
 			array( self::class, 'base_url_render' ),
 			'wrap_settings',
 			'wrap_settings_section'
@@ -49,7 +49,7 @@ class WrapSettings {
 
         add_settings_field(
             'wrap_base_path',
-            __('External Site Base Path', 'magiiic-wrap'),
+            __('Third-party app Base Path', 'magiiic-wrap'),
             [self::class, 'base_path_render'],
             'wrap_settings',
             'wrap_settings_section'
@@ -67,12 +67,17 @@ class WrapSettings {
 
 	public static function base_url_render() {
 		$options = get_option( 'wrap_settings' );
-		$class   = '';
+		$class   = 'regular-text';
 		if ( get_option( 'wrap_base_url_error' ) ) {
-			$class = 'error';
+			$class .= ' error';
 		}
+		$home_url = home_url('/');
+		$uri_part = isset($options['wrap_base_url_uri']) ? $options['wrap_base_url_uri'] : '';
 		?>
-		<input type='text' name='wrap_settings[wrap_base_url]' value='<?php echo esc_attr( $options['wrap_base_url'] ); ?>' class='<?php echo $class; ?>'>
+        <label>
+            <span class="wrap-input-prefix"><?php echo esc_html( $home_url ); ?></span>
+            <span class="wrap-prefixed-input"><input type='text' name='wrap_settings[wrap_base_url_uri]' value='<?php echo esc_attr( $uri_part ); ?>' class='<?php echo $class; ?>'>
+        </label>
 		<?php
 		if ( get_option( 'wrap_base_url_error' ) ) {
 			echo '<p class="description error">' . __( 'URL is not reachable.', 'wrap' ) . '</p>';
@@ -82,9 +87,17 @@ class WrapSettings {
 
 	public static function base_path_render() {
 		$options = get_option( 'wrap_settings' );
-		?>
-		<input type='text' name='wrap_settings[wrap_base_path]' value='<?php echo esc_attr( $options['wrap_base_path'] ); ?>'>
-		<?php
+        $class   = 'regular-text';
+        $document_root = $_SERVER['DOCUMENT_ROOT'];
+        $subfolder = isset($options['wrap_base_path_subfolder']) ? $options['wrap_base_path_subfolder'] : '';
+        ?>
+        <div class="wrap-path-input">
+            <label>
+                <span class="wrap-input-prefix"><?php echo esc_html( "$document_root/" ); ?></span>
+                <input type='text' name='wrap_settings[wrap_base_path_subfolder]' value='<?php echo esc_attr( $subfolder ); ?>' class='<?php echo $class; ?>'>
+            </label>
+        </div>
+        <?php
 		if ( get_option( 'wrap_base_path_error' ) ) {
 			echo '<p class="description error">' . __( 'The path is not accessible.', 'wrap' ) . '</p>';
 			delete_option( 'wrap_base_path_error' );
@@ -106,7 +119,7 @@ class WrapSettings {
 
 	public static function options_page() {
 		?>
-		<form action='options.php' method='post'>
+		<form action='options.php' method='post' class='wrap-form wrap-settings-form'>
 			<h2><?php _e( 'WRAP Settings', 'wrap' ); ?></h2>
 			<?php
 			settings_errors( 'wrap_settings' ); // Afficher les erreurs ici
@@ -120,11 +133,14 @@ class WrapSettings {
 
 	public static function sanitize( $input ) {
 		$output = array();
-		if ( isset( $input['wrap_base_url'] ) ) {
-			$url = rtrim( esc_url_raw( $input['wrap_base_url'] ), '/' );
-			if ( filter_var( $url, FILTER_VALIDATE_URL ) ) {
-				$output['wrap_base_url'] = $url;
-				if ( self::url_exists( $url ) ) {
+		if ( isset( $input['wrap_base_url_uri'] ) ) {
+			$home_url = home_url('/');
+			$uri = ltrim( sanitize_text_field( $input['wrap_base_url_uri'] ), '/' );
+			$full_url = rtrim( esc_url_raw( $home_url . $uri ), '/' );
+			if ( filter_var( $full_url, FILTER_VALIDATE_URL ) ) {
+				$output['wrap_base_url'] = $full_url;
+				$output['wrap_base_url_uri'] = $uri;
+				if ( self::url_exists( $full_url ) ) {
 					delete_option( 'wrap_base_url_error' );
 				} else {
 					add_settings_error(
@@ -145,21 +161,24 @@ class WrapSettings {
 				update_option( 'wrap_base_url_error', true );
 			}
 		}
-		if ( ! empty( $input['wrap_base_path'] ) ) {
-			$path                     = rtrim( sanitize_text_field( $input['wrap_base_path'] ), '/' );
-			$output['wrap_base_path'] = $path;
-			if ( ! self::path_exists( $path ) ) {
-				add_settings_error(
-					'wrap_settings',
-					'wrap_base_path_error',
-					__( 'The path is not accessible.', 'wrap' ),
-					'error'
-				);
-				update_option( 'wrap_base_path_error', true );
-			} else {
-				delete_option( 'wrap_base_path_error' );
-			}
-		}
+		if ( isset( $input['wrap_base_path_subfolder'] ) ) {
+            $document_root = $_SERVER['DOCUMENT_ROOT'];
+            $subfolder = ltrim( sanitize_text_field( $input['wrap_base_path_subfolder'] ), '/' );
+            $full_path = rtrim( $document_root . '/' . $subfolder, '/' );
+            if ( self::path_exists( $full_path ) ) {
+                $output['wrap_base_path'] = $full_path;
+                $output['wrap_base_path_subfolder'] = $subfolder;
+                delete_option( 'wrap_base_path_error' );
+            } else {
+                add_settings_error(
+                    'wrap_settings',
+                    'wrap_base_path_error',
+                    __( 'The path is not accessible.', 'wrap' ),
+                    'error'
+                );
+                update_option( 'wrap_base_path_error', true );
+            }
+        }
 
         if (isset($input['profile_page'])) {
             $page_id = intval($input['profile_page']);
