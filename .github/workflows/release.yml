@@ -49,15 +49,15 @@ jobs:
 
           # Generate exclusion arguments from .gitignore and .distignore
           EXCLUDES=""
-          [ -f .gitignore ] && EXCLUDES+=" --exclude-from=.gitignore"
-          [ -f .distignore ] && EXCLUDES.=" --exclude-from=.distignore"
+          [ -f .gitignore ] && EXCLUDES="$EXCLUDES --exclude-from=.gitignore"
+          [ -f .distignore ] && EXCLUDES="$EXCLUDES --exclude-from=.distignore"
           # Add default exclusions
-          EXCLUDES+=" --exclude=.git/"
-          EXCLUDES+=" --exclude=node_modules/"
-          EXCLUDES+=" --exclude=tests/"
-          EXCLUDES+=" --exclude=.github/"
-          EXCLUDES+=" --exclude=.env"
-          EXCLUDES+=" --exclude=README.md"
+          EXCLUDES="$EXCLUDES --exclude=.git/"
+          EXCLUDES="$EXCLUDES --exclude=node_modules/"
+          EXCLUDES="$EXCLUDES --exclude=tests/"
+          EXCLUDES="$EXCLUDES --exclude=.github/"
+          EXCLUDES="$EXCLUDES --exclude=.env"
+          EXCLUDES="$EXCLUDES --exclude=README.md"
 
           # Copy files into the temporary directory
           rsync -av $EXCLUDES ./ "${PLUGIN_NAME}/"
