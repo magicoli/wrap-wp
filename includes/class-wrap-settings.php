@@ -26,7 +26,7 @@ class WrapSettings {
 
 		add_settings_section(
 			'wrap_settings_section',
-			__( 'Settings for WRAP Plugin', 'wrap' ),
+			__( 'General', 'wrap' ),
 			array( self::class, 'settings_section_callback' ),
 			'wrap_settings'
 		);
@@ -47,14 +47,23 @@ class WrapSettings {
 			'wrap_settings_section'
 		);
 
-		add_settings_field(
-			'wrap_base_path',
-			__( 'External Site Base Path', 'wrap' ),
-			array( self::class, 'base_path_render' ),
-			'wrap_settings',
-			'wrap_settings_section'
-		);
-	}
+        add_settings_field(
+            'wrap_base_path',
+            __('External Site Base Path', 'magiiic-wrap'),
+            [self::class, 'base_path_render'],
+            'wrap_settings',
+            'wrap_settings_section'
+        );
+
+        // Ajouter le nouveau champ "Profile Page"
+        add_settings_field(
+            'profile_page',
+            __('Profile Page', 'magiiic-wrap'),
+            [self::class, 'profile_page_render'],
+            'wrap_settings',
+            'wrap_settings_section'
+        );
+    }
 
 	public static function base_url_render() {
 		$options = get_option( 'wrap_settings' );
@@ -152,6 +161,13 @@ class WrapSettings {
 			}
 		}
 
+        if (isset($input['profile_page'])) {
+            $page_id = intval($input['profile_page']);
+            if ($page_id > 0) {
+                $output['profile_page'] = $page_id;
+            }
+        }
+
 		$output['wrap_menu_position'] = isset( $input['wrap_menu_position'] ) ? 1 : 0;
 
 		return $output;
@@ -169,6 +185,47 @@ class WrapSettings {
 	private static function path_exists( $path ) {
 		return is_dir( $path ) && is_readable( $path );
 	}
+
+    /**
+     * Render the Profile Page select field
+     */
+    public static function profile_page_render() {
+        $options = get_option('wrap_settings');
+        $selected_page = isset($options['profile_page']) ? $options['profile_page'] : '';
+        error_log("Selected page: $selected_page");
+        $pages = self::get_pages_with_shortcode('wrap_user_profile');
+        if (empty($pages)) {
+            echo '<p class="description error">' . __('Create a page for profiles and include the shortcode <code>[wrap_user_profile]</code>.', 'magiiic-wrap') . '</p>';
+        } else {
+        ?>
+        <select name='wrap_settings[profile_page]'>
+            <option value=''>-- <?php _e('Select a Profile Page', 'magiiic-wrap'); ?> --</option>
+            <?php foreach ($pages as $page) : ?>
+                <option value='<?php echo esc_attr($page->ID); ?>' <?php selected($selected_page, $page->ID); ?>><?php echo esc_html($page->post_title); ?></option>
+            <?php endforeach; ?>
+        </select>
+        <?php
+        }
+    }
+
+    /**
+     * Get all pages containing a specific shortcode
+     *
+     * @param string $shortcode The shortcode to search for.
+     * @return array Array of WP_Post objects.
+     */
+    public static function get_pages_with_shortcode($shortcode) {
+        global $wpdb;
+        $shortcode = esc_sql($shortcode);
+        $query = "
+        SELECT ID, post_title FROM {$wpdb->posts}
+        WHERE post_type = 'page' 
+        AND post_status = 'publish'
+        AND post_content LIKE '%[" . $shortcode . "]%'
+        ";
+        $results = $wpdb->get_results($query);
+        return $results;
+    }
 }
 
 // We don't initialize the class here, it's done in wrap.php
