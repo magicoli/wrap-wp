@@ -1,100 +1,23 @@
-name: Create GitHub Release
+name: Create Draft Release
 
 on:
   push:
     tags:
-      - 'v*.*.*'  # Triggers the workflow for tags like v1.0.0
+      - 'v*.*.*'
 
 jobs:
-  release:
+  create-draft-release:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: "read"
-      releases: "write"
-
     steps:
-      # Step 1: Checkout the repository code
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Fetches the Git history
 
-      # Step 2: Set up environment variables
-      - name: Set up environment variables
-        run: |
-          PLUGIN_NAME=wrap
-          VERSION=${GITHUB_REF#refs/tags/}
-          echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
-          # Extract the repository name to use as the plugin name
-          echo "PLUGIN_NAME=$PLUGIN_NAME" >> $GITHUB_ENV
-
-      # Step 3: Get the tag message
-      - name: Get Tag Message
-        id: get_tag_message
-        run: |
-          TAG_MESSAGE=$(git tag -l "${VERSION}" --format='%(contents)')
-          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
-          echo "$TAG_MESSAGE" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      # Step 4: Generate the ZIP archive using .gitignore and .distignore
-      - name: Generate Release ZIP
-        run: |
-          PLUGIN_NAME="${PLUGIN_NAME}"
-          RELEASE_VERSION="${VERSION}"
-          RELEASE_ZIP="${PLUGIN_NAME}-${RELEASE_VERSION}.zip"
-
-          # Create a temporary directory with the plugin name
-          mkdir -p "${PLUGIN_NAME}"
-
-          # Generate exclusion arguments from .gitignore and .distignore
-          EXCLUDES=""
-          [ -f .gitignore ] && EXCLUDES+=" --exclude-from=.gitignore"
-          [ -f .distignore ] && EXCLUDES.=" --exclude-from=.distignore"
-          # Add default exclusions
-          EXCLUDES+=" --exclude=.git/"
-          EXCLUDES+=" --exclude=node_modules/"
-          EXCLUDES+=" --exclude=tests/"
-          EXCLUDES+=" --exclude=.github/"
-          EXCLUDES+=" --exclude=.env"
-          EXCLUDES+=" --exclude=README.md"
-
-          # Copy files into the temporary directory
-          rsync -av $EXCLUDES ./ "${PLUGIN_NAME}/"
-
-          # Create the ZIP archive containing the plugin directory
-          zip -r "${RELEASE_ZIP}" "${PLUGIN_NAME}"
-
-          # Remove the temporary plugin directory
-          rm -rf "${PLUGIN_NAME}"
-
-          # Verify that the ZIP file was created
-          if [ ! -f "${RELEASE_ZIP}" ]; then
-            echo "Error: The ZIP archive was not created."
-            exit 1
-          fi
-
-      # Step 5: Create the GitHub Release as a Draft
-      - name: Create GitHub Release
-        id: create_release
+      - name: Create Draft Release
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          release_name: Release ${{ env.RELEASE_VERSION }}
-          body: ${{ env.RELEASE_BODY }}
-          draft: true          # Set to true to create a draft release
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: true
           prerelease: false
-
-      # Step 6: Attach the ZIP archive to the release
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.RELEASE_ZIP }}  # Path to the ZIP file
-          asset_name: ${{ env.RELEASE_ZIP }}    # Name of the asset on GitHub
-          asset_content_type: application/zip
