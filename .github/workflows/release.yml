@@ -29,6 +29,7 @@ jobs:
           echo "PLUGIN_NAME=$PLUGIN_NAME" >> $GITHUB_ENV
           RELEASE_VERSION="${VERSION}"
           RELEASE_ZIP="${PLUGIN_NAME}-${RELEASE_VERSION}.zip"
+          echo "RELEASE_ZIP=${RELEASE_ZIP}" >> $GITHUB_ENV
 
       # Step 3: Get the tag message
       - name: Get Tag Message
@@ -63,13 +64,13 @@ jobs:
           rsync -av $EXCLUDES ./ "${PLUGIN_NAME}/"
 
           # Create the ZIP archive containing the plugin directory
-          zip -r "${RELEASE_ZIP}" "${PLUGIN_NAME}"
+          zip -r "${{ env.RELEASE_ZIP }}" "${PLUGIN_NAME}"
 
           # Remove the temporary plugin directory
           rm -rf "${PLUGIN_NAME}"
 
           # Verify that the ZIP file was created
-          if [ ! -f "${RELEASE_ZIP}" ]; then
+          if [ ! -f "${{ env.RELEASE_ZIP }}" ]; then
             echo "Error: The ZIP archive was not created."
             exit 1
           fi
@@ -94,6 +95,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${RELEASE_ZIP}  # Path to the ZIP file
-          asset_name: ${RELEASE_ZIP}    # Name of the asset on GitHub
+          asset_path: ./${{ env.RELEASE_ZIP }}  # Path to the ZIP file
+          asset_name: ${{ env.RELEASE_ZIP }}    # Name of the asset on GitHub
           asset_content_type: application/zip
