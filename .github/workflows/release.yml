@@ -106,7 +106,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "🎉 `${{ env.RELEASE_ZIP }}` has been released.
+              "text": "🎉 ${PLUGIN_NAME} ${{ env.RELEASE_VERSION }} released."
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
