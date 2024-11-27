@@ -36,7 +36,7 @@ module.exports = function ( grunt ) {
 
 			addtextdomain: {
 				options: {
-					textdomain: 'magiiic-wrap',
+					textdomain: 'wrap',
 				},
 				update_all_domains: {
 					options: {

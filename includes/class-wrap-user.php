@@ -29,14 +29,14 @@ class WrapUser {
 	public static function render_profile_shortcode() {
 		// Ensure the user is logged in
 		if ( ! is_user_logged_in() ) {
-			return '<p>' . __( 'You need to be logged in to view this page.', 'magiiic-wrap' ) . '</p>';
+			return '<p>' . __( 'You need to be logged in to view this page.', 'wrap' ) . '</p>';
 		}
 
 		$user = wp_get_current_user();
 
 		// Check if the form is submitted and display success message
 		if ( isset( $_GET['profile_updated'] ) && $_GET['profile_updated'] == 'true' ) {
-			echo '<div class="wrap"><p>' . __( 'Your profile has been updated successfully.', 'magiiic-wrap' ) . '</p></div>';
+			echo '<div class="wrap"><p>' . __( 'Your profile has been updated successfully.', 'wrap' ) . '</p></div>';
 		}
 
 		// Récupérer les groupes accessibles
@@ -50,33 +50,33 @@ class WrapUser {
 				<?php wp_nonce_field( 'wrap_user_profile_update', 'wrap_user_profile_nonce' ); ?>
 				<table class="form-table">
 					<tr>
-						<th><label for="first_name"><?php _e( 'First Name', 'magiiic-wrap' ); ?></label></th>
+						<th><label for="first_name"><?php _e( 'First Name', 'wrap' ); ?></label></th>
 						<td>
 							<input type="text" name="first_name" id="first_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'first_name', true ) ); ?>" class="regular-text" />
 						</td>
 					</tr>
 					<tr>
-						<th><label for="last_name"><?php _e( 'Last Name', 'magiiic-wrap' ); ?></label></th>
+						<th><label for="last_name"><?php _e( 'Last Name', 'wrap' ); ?></label></th>
 						<td>
 							<input type="text" name="last_name" id="last_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'last_name', true ) ); ?>" class="regular-text" />
 						</td>
 					</tr>
 					<tr>
-						<th><label for="email"><?php _e( 'Email', 'magiiic-wrap' ); ?></label></th>
+						<th><label for="email"><?php _e( 'Email', 'wrap' ); ?></label></th>
 						<td>
 							<input type="email" name="email" id="email" value="<?php echo esc_attr( $user->user_email ); ?>" class="regular-text" required />
 						</td>
 					</tr>
 					<?php if ( ! empty( $groups ) ) : ?>
 					<tr valign="top">
-						<th><label for="groups"><?php _e( 'WRAP sites', 'magiiic-wrap' ); ?></label></th>
+						<th><label for="groups"><?php _e( 'WRAP sites', 'wrap' ); ?></label></th>
 						<td>
 							<ul class="no-bullets">
 								<?php foreach ( $groups as $group ) : ?>
 									<li>
 										<?php echo esc_html( $group->name ); ?> 
 										<a href="<?php echo esc_url( "$wrap_base_url/$group->slug/upload/" ); ?>">
-											<?php _e( 'Uploads', 'magiiic-wrap' ); ?>
+											<?php _e( 'Uploads', 'wrap' ); ?>
 										</a>
 									</li>
 								<?php endforeach; ?>
@@ -86,7 +86,7 @@ class WrapUser {
 					<?php endif; ?>
 				</table>
 				<p>
-					<input type="submit" value="<?php esc_attr_e( 'Update Profile', 'magiiic-wrap' ); ?>" class="button button-primary" />
+					<input type="submit" value="<?php esc_attr_e( 'Update Profile', 'wrap' ); ?>" class="button button-primary" />
 				</p>
 			</form>
 		</div>

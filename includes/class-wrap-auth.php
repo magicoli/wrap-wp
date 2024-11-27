@@ -70,7 +70,7 @@ class WrapAuth {
 
 		// Check if group is valid
 		if ( empty( $wrap_group ) ) {
-			self::render_error_page( __( 'Invalid request.', 'magiiic-wrap' ), 400 );
+			self::render_error_page( __( 'Invalid request.', 'wrap' ), 400 );
 		}
 
 		// Check that user is allowed to access the group
@@ -79,10 +79,10 @@ class WrapAuth {
 		if ( $term ) {
 			$group_users = get_term_meta( $term->term_id, 'group_users', true );
 			if ( ! in_array( $user->ID, (array) $group_users ) && ! current_user_can( 'manage_options' ) ) {
-				self::render_error_page( __( 'You are not authorized to access this page.', 'magiiic-wrap' ), 403 );
+				self::render_error_page( __( 'You are not authorized to access this page.', 'wrap' ), 403 );
 			}
 		} else {
-			self::render_error_page( __( 'Group not found.', 'magiiic-wrap' ), 404 );
+			self::render_error_page( __( 'Group not found.', 'wrap' ), 404 );
 		}
 
 		// Write cookie specific to the group for Apache to verify
@@ -110,7 +110,7 @@ class WrapAuth {
 		?>
 		<div class="wrap">
 			<p><?php echo esc_html( $message ); ?></p>
-			<p><a href="<?php echo esc_url( home_url() ); ?>"><?php _e( 'Return to home page', 'magiiic-wrap' ); ?></a></p>
+			<p><a href="<?php echo esc_url( home_url() ); ?>"><?php _e( 'Return to home page', 'wrap' ); ?></a></p>
 		</div>
 		<?php
 
@@ -130,7 +130,7 @@ class WrapAuth {
 		$term = get_term_by( 'slug', $group, 'wrap-group' );
 		if ( ! $term ) {
 			return sprintf(
-				__( '# Cannot generate rules, group %s not found.', 'magiiic-wrap' ),
+				__( '# Cannot generate rules, group %s not found.', 'wrap' ),
 				$group
 			);
 		}
