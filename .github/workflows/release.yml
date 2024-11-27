@@ -38,7 +38,7 @@ jobs:
           echo "$TAG_MESSAGE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      # Step 4: Generate the ZIP archive using .gitignore and .distignore
+      # Step 4: Generate the ZIP archive
       - name: Generate Release ZIP
         run: |
           PLUGIN_NAME="${PLUGIN_NAME}"
