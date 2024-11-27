@@ -79,15 +79,14 @@ class WrapSettings {
             <span class="wrap-prefixed-input"><input type='text' name='wrap_settings[wrap_base_url_uri]' value='<?php echo esc_attr( $uri_part ); ?>' class='<?php echo $class; ?>'>
         </label>
 		<?php
-		if ( get_option( 'wrap_base_url_error' ) ) {
-			echo '<p class="description error">' . __( 'URL is not reachable.', 'wrap' ) . '</p>';
-			delete_option( 'wrap_base_url_error' );
-		}
 	}
 
 	public static function base_path_render() {
 		$options = get_option( 'wrap_settings' );
         $class   = 'regular-text';
+		if ( get_option( 'wrap_base_path_error' ) ) {
+            $class .= ' error';
+        }
         $document_root = $_SERVER['DOCUMENT_ROOT'];
         $subfolder = isset($options['wrap_base_path_subfolder']) ? $options['wrap_base_path_subfolder'] : '';
         ?>
@@ -98,10 +97,6 @@ class WrapSettings {
             </label>
         </div>
         <?php
-		if ( get_option( 'wrap_base_path_error' ) ) {
-			echo '<p class="description error">' . __( 'The path is not accessible.', 'wrap' ) . '</p>';
-			delete_option( 'wrap_base_path_error' );
-		}
 	}
 
 	public static function menu_position_render() {
@@ -132,6 +127,7 @@ class WrapSettings {
 	}
 
 	public static function sanitize( $input ) {
+        $original_options = get_option('wrap_settings');
 		$output = array();
 		if ( isset( $input['wrap_base_url_uri'] ) ) {
 			$home_url = home_url('/');
@@ -143,19 +139,23 @@ class WrapSettings {
 				if ( self::url_exists( $full_url ) ) {
 					delete_option( 'wrap_base_url_error' );
 				} else {
+                    $output['wrap_base_url'] = $original_options['wrap_base_url'];
+                    $output['wrap_base_url_uri'] = $original_options['wrap_base_url_uri'];
 					add_settings_error(
 						'wrap_settings',
 						'wrap_base_url_error',
-						__( 'WRAP: The URL seems properly formatted but is not reachable.', 'wrap' ),
+						sprintf(__( 'WRAP: The URL %s is not reachable.', 'wrap' ), $full_url),
 						'error'
 					);
 					update_option( 'wrap_base_url_error', true );
 				}
 			} else {
+                $output['wrap_base_url'] = $original_options['wrap_base_url'];
+                $output['wrap_base_url_uri'] = $original_options['wrap_base_url_uri'];
 				add_settings_error(
 					'wrap_settings',
 					'wrap_base_url_error',
-					__( 'WRAP: Invalid URL. Please enter a valid URL.', 'wrap' ),
+					sprintf(__( 'WRAP: Invalid URL %s. Please enter a valid URL.', 'wrap' ), $full_url),
 					'error'
 				);
 				update_option( 'wrap_base_url_error', true );
@@ -170,13 +170,16 @@ class WrapSettings {
                 $output['wrap_base_path_subfolder'] = $subfolder;
                 delete_option( 'wrap_base_path_error' );
             } else {
+                $output['wrap_base_path'] = $original_options['wrap_base_path'];
+                $output['wrap_base_path_subfolder'] = $original_options['wrap_base_path_subfolder'];
                 add_settings_error(
                     'wrap_settings',
                     'wrap_base_path_error',
-                    __( 'The path is not accessible.', 'wrap' ),
+                    sprintf(__( 'The path %s does not exist or is not accessible.', 'wrap' ), $full_path),
                     'error'
                 );
                 update_option( 'wrap_base_path_error', true );
+                // Keep the previous wrap_base_path option
             }
         }
 
