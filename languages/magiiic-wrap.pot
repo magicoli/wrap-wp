@@ -1,0 +1,204 @@
+# Copyright (C) 2024 Olivier van Helden
+# This file is distributed under the AGPL-3.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: W.R.A.P. - Web Reel Automated Publishing 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wrap\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-27T00:30:10+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+
+#. Plugin Name of the plugin
+msgid "W.R.A.P. - Web Reel Automated Publishing"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://wrap.rocks/"
+msgstr ""
+
+#. Description of the plugin
+msgid "WordPress-based authentication for third-party applications via .htaccess"
+msgstr ""
+
+#. Author of the plugin
+msgid "Olivier van Helden"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://magiiic.media/"
+msgstr ""
+
+#: includes/class-wrap-auth.php:73
+msgid "Invalid request."
+msgstr ""
+
+#: includes/class-wrap-auth.php:82
+msgid "You are not authorized to access this page."
+msgstr ""
+
+#: includes/class-wrap-auth.php:85
+msgid "Group not found."
+msgstr ""
+
+#: includes/class-wrap-auth.php:113
+msgid "Return to home page"
+msgstr ""
+
+#: includes/class-wrap-auth.php:133
+msgid "# Cannot generate rules, group %s not found."
+msgstr ""
+
+#: includes/class-wrap-group.php:30
+msgctxt "taxonomy general name"
+msgid "Groups"
+msgstr ""
+
+#: includes/class-wrap-group.php:31
+msgctxt "taxonomy singular name"
+msgid "Group"
+msgstr ""
+
+#: includes/class-wrap-group.php:32
+msgid "Search Groups"
+msgstr ""
+
+#: includes/class-wrap-group.php:33
+msgid "All Groups"
+msgstr ""
+
+#: includes/class-wrap-group.php:34
+msgid "Parent Group"
+msgstr ""
+
+#: includes/class-wrap-group.php:35
+msgid "Parent Group:"
+msgstr ""
+
+#: includes/class-wrap-group.php:36
+msgid "Edit Group"
+msgstr ""
+
+#: includes/class-wrap-group.php:37
+msgid "Update Group"
+msgstr ""
+
+#: includes/class-wrap-group.php:38
+msgid "Add New Group"
+msgstr ""
+
+#: includes/class-wrap-group.php:39
+msgid "New Group Name"
+msgstr ""
+
+#: includes/class-wrap-group.php:40
+#: includes/class-wrap-group.php:56
+msgid "Groups"
+msgstr ""
+
+#: includes/class-wrap-group.php:71
+#: includes/class-wrap-group.php:95
+msgid "Allow authentication"
+msgstr ""
+
+#: includes/class-wrap-group.php:112
+msgid ".htaccess rules"
+msgstr ""
+
+#: includes/class-wrap-group.php:114
+msgid "Copy these rules and paste them into your .htaccess file of your group's main folder."
+msgstr ""
+
+#: includes/class-wrap-group.php:146
+msgid "Allowed Users"
+msgstr ""
+
+#: includes/class-wrap-settings.php:20
+msgid "WRAP"
+msgstr ""
+
+#: includes/class-wrap-settings.php:21
+#: includes/class-wrap-settings.php:101
+msgid "WRAP Settings"
+msgstr ""
+
+#: includes/class-wrap-settings.php:21
+msgid "Settings"
+msgstr ""
+
+#: includes/class-wrap-settings.php:29
+msgid "Settings for WRAP Plugin"
+msgstr ""
+
+#: includes/class-wrap-settings.php:36
+msgid "Admin Menu Position"
+msgstr ""
+
+#: includes/class-wrap-settings.php:44
+msgid "External Site Base URL"
+msgstr ""
+
+#: includes/class-wrap-settings.php:52
+msgid "External Site Base Path"
+msgstr ""
+
+#: includes/class-wrap-settings.php:69
+msgid "URL is not reachable."
+msgstr ""
+
+#: includes/class-wrap-settings.php:80
+#: includes/class-wrap-settings.php:146
+msgid "The path is not accessible."
+msgstr ""
+
+#: includes/class-wrap-settings.php:90
+msgid "Up Where We Belong..."
+msgstr ""
+
+#: includes/class-wrap-settings.php:95
+msgid "Enter the settings for the WRAP plugin."
+msgstr ""
+
+#: includes/class-wrap-settings.php:124
+msgid "WRAP: The URL seems properly formatted but is not reachable."
+msgstr ""
+
+#: includes/class-wrap-settings.php:133
+msgid "WRAP: Invalid URL. Please enter a valid URL."
+msgstr ""
+
+#: includes/class-wrap-user.php:32
+msgid "You need to be logged in to view this page."
+msgstr ""
+
+#: includes/class-wrap-user.php:39
+msgid "Your profile has been updated successfully."
+msgstr ""
+
+#: includes/class-wrap-user.php:53
+msgid "First Name"
+msgstr ""
+
+#: includes/class-wrap-user.php:59
+msgid "Last Name"
+msgstr ""
+
+#: includes/class-wrap-user.php:65
+msgid "Email"
+msgstr ""
+
+#: includes/class-wrap-user.php:72
+msgid "WRAP sites"
+msgstr ""
+
+#: includes/class-wrap-user.php:79
+msgid "Uploads"
+msgstr ""
+
+#: includes/class-wrap-user.php:89
+msgid "Update Profile"
+msgstr ""

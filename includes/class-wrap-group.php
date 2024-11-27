@@ -27,17 +27,17 @@ class WrapGroup {
 
 	public static function create_group_taxonomy() {
 		$labels = array(
-			'name'              => _x( 'Groups', 'taxonomy general name', 'wrap' ),
-			'singular_name'     => _x( 'Group', 'taxonomy singular name', 'wrap' ),
-			'search_items'      => __( 'Search Groups', 'wrap' ),
-			'all_items'         => __( 'All Groups', 'wrap' ),
-			'parent_item'       => __( 'Parent Group', 'wrap' ),
-			'parent_item_colon' => __( 'Parent Group:', 'wrap' ),
-			'edit_item'         => __( 'Edit Group', 'wrap' ),
-			'update_item'       => __( 'Update Group', 'wrap' ),
-			'add_new_item'      => __( 'Add New Group', 'wrap' ),
-			'new_item_name'     => __( 'New Group Name', 'wrap' ),
-			'menu_name'         => __( 'Groups', 'wrap' ),
+			'name'              => _x( 'Groups', 'taxonomy general name', 'magiiic-wrap' ),
+			'singular_name'     => _x( 'Group', 'taxonomy singular name', 'magiiic-wrap' ),
+			'search_items'      => __( 'Search Groups', 'magiiic-wrap' ),
+			'all_items'         => __( 'All Groups', 'magiiic-wrap' ),
+			'parent_item'       => __( 'Parent Group', 'magiiic-wrap' ),
+			'parent_item_colon' => __( 'Parent Group:', 'magiiic-wrap' ),
+			'edit_item'         => __( 'Edit Group', 'magiiic-wrap' ),
+			'update_item'       => __( 'Update Group', 'magiiic-wrap' ),
+			'add_new_item'      => __( 'Add New Group', 'magiiic-wrap' ),
+			'new_item_name'     => __( 'New Group Name', 'magiiic-wrap' ),
+			'menu_name'         => __( 'Groups', 'magiiic-wrap' ),
 		);
 
 		$args = array(
@@ -68,7 +68,7 @@ class WrapGroup {
 	public static function add_group_user_field( $taxonomy ) {
 		?>
 		<div class="form-field term-wrap-group ">
-			<label for="group_users"><?php _e( 'Allow authentication', 'wrap' ); ?></label>
+			<label for="group_users"><?php _e( 'Allow authentication', 'magiiic-wrap' ); ?></label>
 			<select multiple="multiple" name="group_users[]" id="group_users" class="postform select2 full-width">
 				<?php
 				$users = get_users();
@@ -92,7 +92,7 @@ class WrapGroup {
 		$group_users = get_term_meta( $term->term_id, 'group_users', true );
 		?>
 		<tr class="form-field term-wrap-group">
-			<th scope="row"><label for="group_users"><?php _e( 'Allow authentication', 'wrap' ); ?></label></th>
+			<th scope="row"><label for="group_users"><?php _e( 'Allow authentication', 'magiiic-wrap' ); ?></label></th>
 			<td>
 				<select multiple="multiple" name="group_users[]" id="group_users" class="postform select2">
 					<?php
@@ -109,9 +109,9 @@ class WrapGroup {
 		$htaccess_rules = WrapAuth::build_htaccess_rules( $term->slug );
 		?>
 		<div class='wrap-admin-sidebar'>
-				<label><?php _e( '.htaccess rules', 'wrap' ); ?></label>
+				<label><?php _e( '.htaccess rules', 'magiiic-wrap' ); ?></label>
 				<textarea readonly rows="10" cols="50" class="large-text code"><?php echo esc_textarea( $htaccess_rules ); ?></textarea>
-				<p class="description"><?php _e( 'Copy these rules and paste them into your .htaccess file of your group\'s main folder.', 'wrap' ); ?></p>
+				<p class="description"><?php _e( 'Copy these rules and paste them into your .htaccess file of your group\'s main folder.', 'magiiic-wrap' ); ?></p>
 		</div>
 		<?php
 	}
@@ -143,7 +143,7 @@ class WrapGroup {
 		foreach ( $columns as $key => $value ) {
 			$new_columns[ $key ] = $value;
 			if ( $key === 'name' ) {
-				$new_columns['group_users'] = __( 'Allowed Users', 'wrap' );
+				$new_columns['group_users'] = __( 'Allowed Users', 'magiiic-wrap' );
 			}
 		}
 		return $new_columns;
