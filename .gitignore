@@ -13,3 +13,4 @@ Thumbs.db
 /vendor/
 wp-cli.local.yml
 *.zip
+src/test-*
