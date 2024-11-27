@@ -57,11 +57,11 @@ jobs:
           EXCLUDES=$(generate_exclude_args .gitignore)
           EXCLUDES+=" $(generate_exclude_args .distignore)"
           # Add additional exclusions
-          EXCLUDES+=" --exclude=.git/
-          EXCLUDES+=" --exclude=node_modules/
-          EXCLUDES+=" --exclude=tests/
-          EXCLUDES+=" --exclude=.github/
-          EXCLUDES+=" --exclude=.env
+          EXCLUDES+=" --exclude=.git/"
+          EXCLUDES+=" --exclude=node_modules/"
+          EXCLUDES+=" --exclude=tests/"
+          EXCLUDES+=" --exclude=.github/"
+          EXCLUDES+=" --exclude=.env"
           EXCLUDES+=" --exclude=README.md"
 
           # Copy files into the temporary directory
