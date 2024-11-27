@@ -224,6 +224,19 @@ class WrapSettings {
         AND post_content LIKE '%[" . $shortcode . "]%'
         ";
         $results = $wpdb->get_results($query);
+
+        // Filter out translated pages if WPML is active
+        if (function_exists('icl_object_id')) {
+            $original_results = [];
+            foreach ($results as $page) {
+                $original_id = icl_object_id($page->ID, 'page', true, wpml_get_default_language());
+                if ($original_id == $page->ID) {
+                    $original_results[] = $page;
+                }
+            }
+            return $original_results;
+        }
+
         return $results;
     }
 }
