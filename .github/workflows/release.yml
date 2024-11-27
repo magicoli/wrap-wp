@@ -3,7 +3,7 @@ name: Create GitHub Release
 on:
   push:
     tags:
-      - 'v*.*.*'  # Tags like v1.0.0, v1.0.0-beta or v1.0.0-beta-1
+      - 'v*.*.*'  # Tags like v1.0.0 or v1.0.0-beta or v1.0.0-beta-1
 
 permissions:
   contents: "write"
