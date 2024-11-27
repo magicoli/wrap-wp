@@ -45,31 +45,114 @@ class WrapUser {
 		$wrap_base_url = isset( $options['wrap_base_url'] ) ? $options['wrap_base_url'] : '';
 		ob_start();
 		?>
-		<div class="wrap">
-			<form method="post">
+		<style>
+			.wrap-form .form-table th {
+				vertical-align: top;
+				text-align: left;
+				padding: 20px 10px 20px 0;
+				width: 200px;
+				line-height: 1.3;
+				font-size: 1rem;
+				font-weight: 600;
+			}
+			.wrap-form .form-table td {
+				margin-bottom: 9px;
+				padding: 15px 10px;
+				/* line-height: 1.3; */
+				vertical-align: middle;
+			}
+			.wrap-form input[type=color],
+			.wrap-form input[type=date],
+			.wrap-form input[type=datetime-local],
+			.wrap-form input[type=datetime],
+			.wrap-form input[type=email],
+			.wrap-form input[type=month],
+			.wrap-form input[type=number],
+			.wrap-form input[type=password],
+			.wrap-form input[type=search],
+			.wrap-form input[type=tel],
+			.wrap-form input[type=text],
+			.wrap-form input[type=time],
+			.wrap-form input[type=url],
+			.wrap-form input[type=week],
+			.wrap-form .regular-text,
+			.wrap-form .button,
+			.wrap-form button,
+			.wrap-form input,
+			.wrap-form select,
+			.wrap-form textarea,
+			.wrap-form option {
+				border-radius: 5px;
+				border-color: rgba(0, 0, 0, .15);
+				color: #373737;
+				font-size: 1rem;
+				padding: 10px;
+				margin: 5px 0;
+				/* padding: 1px 8px; */
+			}
+			.wrap-form .regular-text,
+			.wrap-form .button {
+				padding: 10px;
+				margin: 5px 0;
+			}
+			.wrap-form .regular-text {
+				width: 25em;
+			}
+		</style>
+		<div class="wrap form wrap-form">
+			<form method="post" class="form wrap-form wrap-user-profile">
 				<?php wp_nonce_field( 'wrap_user_profile_update', 'wrap_user_profile_nonce' ); ?>
 				<table class="form-table">
-					<tr>
-						<th><label for="first_name"><?php _e( 'First Name', 'wrap' ); ?></label></th>
+					<tr class="form-field">
+						<th scope="row"><label for="name"><?php _e( 'Name', 'wrap' ); ?></label></th>
 						<td>
-							<input type="text" name="first_name" id="first_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'first_name', true ) ); ?>" class="regular-text" />
+							<input type="text" name="first_name" id="first_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'first_name', true ) ); ?>" class="regular-text" placeholder="<?php _e( 'First Name', 'wrap' ); ?>" />
+							<input type="text" name="last_name" id="last_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'last_name', true ) ); ?>" class="regular-text" placeholder="<?php _e( 'Last Name', 'wrap' ); ?>" />
 						</td>
 					</tr>
-					<tr>
-						<th><label for="last_name"><?php _e( 'Last Name', 'wrap' ); ?></label></th>
+					<tr class="form-field">
+						<th scope="row"><label for="nickname"><?php _e( 'Nick name', 'wrap' ); ?></label></th>
 						<td>
-							<input type="text" name="last_name" id="last_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'last_name', true ) ); ?>" class="regular-text" />
+							<input type="text" name="nickname" id="nickname" value="<?php echo esc_attr( get_user_meta( $user->ID, 'nickname', true ) ); ?>" class="regular-text" />
 						</td>
 					</tr>
-					<tr>
-						<th><label for="email"><?php _e( 'Email', 'wrap' ); ?></label></th>
+					<tr class="form-field">
+						<th scope="row"><label for="display_name"><?php _e( 'Display name publicly as', 'wrap' ); ?></label></th>
+						<td>
+							<select name="display_name" id="display_name" class="regular-text">
+								<?php
+								$public_display = array();
+								$public_display['display_username']  = $user->user_login;
+								$public_display['display_nickname']  = $user->nickname;
+								if ( ! empty( $user->first_name ) ) {
+									$public_display['display_firstname'] = $user->first_name;
+								}
+								if ( ! empty( $user->last_name ) ) {
+									$public_display['display_lastname'] = $user->last_name;
+								}
+								if ( ! empty( $user->first_name ) && ! empty( $user->last_name ) ) {
+									$public_display['display_firstlast'] = $user->first_name . ' ' . $user->last_name;
+									$public_display['display_lastfirst'] = $user->last_name . ' ' . $user->first_name;
+								}
+								$public_display = array_unique( array_map( 'trim', $public_display ) );
+								foreach ( $public_display as $id => $item ) {
+									?>
+									<option <?php selected( $user->display_name, $item ); ?>><?php echo $item; ?></option>
+									<?php
+								}
+								?>
+							</select>
+						</td>
+					</tr>
+					<tr class="form-field">
+						<th scope="row"><label for="email"><?php _e( 'Email', 'wrap' ); ?></label></th>
 						<td>
 							<input type="email" name="email" id="email" value="<?php echo esc_attr( $user->user_email ); ?>" class="regular-text" required />
 						</td>
 					</tr>
 					<?php if ( ! empty( $groups ) ) : ?>
-					<tr valign="top">
-						<th><label for="groups"><?php _e( 'WRAP sites', 'wrap' ); ?></label></th>
+						<tr class="form-field">
+						<th scope="row"><label for="groups"><?php _e( 'WRAP sites', 'wrap' ); ?></label></th>
 						<td>
 							<ul class="no-bullets">
 								<?php foreach ( $groups as $group ) : ?>
@@ -85,7 +168,7 @@ class WrapUser {
 					</tr>
 					<?php endif; ?>
 				</table>
-				<p>
+					<p class="submit">
 					<input type="submit" value="<?php esc_attr_e( 'Update Profile', 'wrap' ); ?>" class="button button-primary" />
 				</p>
 			</form>
@@ -156,6 +239,8 @@ class WrapUser {
 			// Sanitize and validate input
 			$first_name = isset( $_POST['first_name'] ) ? sanitize_text_field( $_POST['first_name'] ) : '';
 			$last_name  = isset( $_POST['last_name'] ) ? sanitize_text_field( $_POST['last_name'] ) : '';
+			$nickname   = isset( $_POST['nickname'] ) ? sanitize_text_field( $_POST['nickname'] ) : '';
+			$display_name = isset( $_POST['display_name'] ) ? sanitize_text_field( $_POST['display_name'] ) : '';
 			$email      = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
 
 			// Validate email
@@ -168,6 +253,13 @@ class WrapUser {
 			// Update user meta
 			update_user_meta( $user_id, 'first_name', $first_name );
 			update_user_meta( $user_id, 'last_name', $last_name );
+			update_user_meta( $user_id, 'nickname', $nickname );
+			wp_update_user(
+				array(
+					'ID'           => $user_id,
+					'display_name' => $display_name,
+				)
+			);
 
 			// Update user email if changed
 			if ( $email !== $user->user_email ) {
