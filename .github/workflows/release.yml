@@ -98,3 +98,15 @@ jobs:
           asset_path: ./${{ env.RELEASE_ZIP }}  # Path to the ZIP file
           asset_name: ${{ env.RELEASE_ZIP }}    # Name of the asset on GitHub
           asset_content_type: application/zip
+
+      # Step 7: Notify via Slack on Success
+      - name: Notify Slack
+        if: success()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+              "text": "🎉 `${{ env.RELEASE_ZIP }}` has been released.
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
