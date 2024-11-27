@@ -76,7 +76,7 @@ class WrapSettings {
 		?>
         <label>
             <span class="wrap-input-prefix"><?php echo esc_html( $home_url ); ?></span>
-            <span class="wrap-prefixed-input"><input type='text' name='wrap_settings[wrap_base_url_uri]' value='<?php echo esc_attr( $uri_part ); ?>' class='<?php echo $class; ?>'>
+            <span class="wrap-prefixed-input"><input type='text' name='wrap_settings[wrap_base_url_uri]' value='<?php echo esc_attr( $uri_part ); ?>' class='<?php echo $class; ?>' id='wrap_base_url_uri'>
         </label>
 		<?php
 	}
@@ -93,9 +93,14 @@ class WrapSettings {
         <div class="wrap-path-input">
             <label>
                 <span class="wrap-input-prefix"><?php echo esc_html( "$document_root/" ); ?></span>
-                <input type='text' name='wrap_settings[wrap_base_path_subfolder]' value='<?php echo esc_attr( $subfolder ); ?>' class='<?php echo $class; ?>'>
+                <input type='text' name='wrap_settings[wrap_base_path_subfolder]' value='<?php echo esc_attr( $subfolder ); ?>' class='<?php echo $class; ?>' id='wrap_base_path_subfolder'>
             </label>
         </div>
+        <script>
+            document.getElementById('wrap_base_url_uri').addEventListener('input', function() {
+                document.getElementById('wrap_base_path_subfolder').value = this.value;
+            });
+        </script>
         <?php
 	}
 
