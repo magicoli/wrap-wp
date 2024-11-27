@@ -1,3 +1,7 @@
 .full-width {
 	width: 100% !important;
 }
+
+.wrap-input-prefix {
+	white-space: nowrap;
+}
