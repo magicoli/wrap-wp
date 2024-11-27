@@ -3,11 +3,11 @@ name: Create GitHub Release
 on:
   push:
     tags:
-      - 'v*.*.*'  # Triggers the workflow for tags following the format vMAJOR.MINOR.PATCH (e.g., v1.0.0)
+      - 'v*.*.*'  # Triggers the workflow for tags like v1.0.0
 
-permissions:
-  contents: read
-  releases: write
+# permissions:
+#   contents: "read"
+#   # releases: "write"
 
 jobs:
   release:
@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetches the entire Git history necessary for tag comparisons
+          fetch-depth: 0  # Fetches the Git history
 
       # Step 2: Set up environment variables
       - name: Set up environment variables
@@ -52,7 +52,8 @@ jobs:
           generate_exclude_args() {
             local exclude_file=$1
             if [ -f "${exclude_file}" ]; then
-              grep -v '^\s*#' "${exclude_file}" | grep -v '^\s*$' | sed 's/^/--exclude=/' 
+              grep -v '^\s*#' "${exclude_file}" | grep -v '^\s*$' \
+              | sed 's/^/--exclude=/'
             fi
           }
 
@@ -60,9 +61,14 @@ jobs:
           EXCLUDES=$(generate_exclude_args .gitignore)
           EXCLUDES+=" $(generate_exclude_args .distignore)"
           # Add additional exclusions
-          EXCLUDES+=" --exclude=.git/ --exclude=node_modules/ --exclude=tests/ --exclude=.github/ --exclude=.env --exclude=README.md"
+          EXCLUDES+=" --exclude=.git/
+          EXCLUDES+=" --exclude=node_modules/
+          EXCLUDES+=" --exclude=tests/
+          EXCLUDES+=" --exclude=.github/
+          EXCLUDES+=" --exclude=.env
+          EXCLUDES+=" --exclude=README.md"
 
-          # Copy files into the temporary directory excluding the defined patterns
+          # Copy files into the temporary directory
           rsync -av $EXCLUDES ./ "${PLUGIN_NAME}/"
 
           # Create the ZIP archive containing the plugin directory
@@ -106,6 +112,6 @@ jobs:
       #   if: success()
       #   uses: slackapi/slack-github-action@v1.23.0
       #   with:
-      #     slack-message: "A new draft release `${{ env.RELEASE_VERSION }}` has been created and is pending publication."
+      #     slack-message: "New draft release `${{ env.RELEASE_VERSION }}`"
       #   env:
       #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
