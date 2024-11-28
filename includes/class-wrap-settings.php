@@ -12,6 +12,8 @@ class WrapSettings {
 	public static function init() {
 		add_action( 'admin_menu', array( self::class, 'add_admin_menu' ) );
 		add_action( 'admin_init', array( self::class, 'settings_init' ) );
+		add_action( 'admin_init', array( self::class, 'restrict_admin_access' ) );
+		add_action( 'after_setup_theme', array( self::class, 'remove_admin_bar' ) );
 	}
 
 	public static function add_admin_menu() {
@@ -36,7 +38,15 @@ class WrapSettings {
 			'wrap_settings_section'
 		);
 
-		add_settings_field(
+        add_settings_field(
+			'wrap_disable_admin_for_subscribers',
+			__( 'Restrict Admin Section', 'wrap' ),
+			array( self::class, 'disable_admin_for_subscribers_render' ),
+			'wrap_settings',
+			'wrap_settings_section'
+		);
+
+        add_settings_field(
 			'wrap_base_url',
 			__( 'Third-party app Base URL', 'wrap' ),
 			array( self::class, 'base_url_render' ),
@@ -199,6 +209,7 @@ class WrapSettings {
         }
 
 		$output['wrap_menu_position'] = isset( $input['wrap_menu_position'] ) ? 1 : 0;
+		$output['wrap_disable_admin_for_subscribers'] = isset( $input['wrap_disable_admin_for_subscribers'] ) ? 1 : 0;
 
 		return $output;
 	}
@@ -268,6 +279,36 @@ class WrapSettings {
 
         return $results;
     }
+
+    public static function disable_admin_for_subscribers_render() {
+		$options = get_option( 'wrap_settings' );
+		?>
+		<input type='checkbox' name='wrap_settings[wrap_disable_admin_for_subscribers]' value='1' <?php checked( 1, isset( $options['wrap_disable_admin_for_subscribers'] ) ? $options['wrap_disable_admin_for_subscribers'] : 0 ); ?>>
+		<label for='wrap_settings[wrap_disable_admin_for_subscribers]'>
+			<?php _e( 'Disable admin section for subscribers with no other roles', 'wrap' ); ?></label>
+		<p class="description"><?php _e( 'Disable the admin section and admin bar for users who have only the subscriber role.', 'wrap' ); ?></p>
+		<?php
+	}
+
+	public static function restrict_admin_access() {
+		$options = get_option( 'wrap_settings' );
+		if ( isset( $options['wrap_disable_admin_for_subscribers'] ) && $options['wrap_disable_admin_for_subscribers'] && self::user_has_only_role( 'subscriber' ) ) {
+			wp_redirect( home_url() );
+			exit;
+		}
+	}
+
+	public static function remove_admin_bar() {
+		$options = get_option( 'wrap_settings' );
+		if ( isset( $options['wrap_disable_admin_for_subscribers'] ) && $options['wrap_disable_admin_for_subscribers'] && self::user_has_only_role( 'subscriber' ) ) {
+			add_filter( 'show_admin_bar', '__return_false' );
+		}
+	}
+
+	private static function user_has_only_role( $role ) {
+		$user = wp_get_current_user();
+		return count( $user->roles ) === 1 && in_array( $role, (array) $user->roles );
+	}
 }
 
 // We don't initialize the class here, it's done in wrap.php
