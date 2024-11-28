@@ -15,10 +15,7 @@ class WrapSettings {
 	}
 
 	public static function add_admin_menu() {
-		$options  = get_option( 'wrap_settings' );
-		$position = isset( $options['wrap_menu_position'] ) && $options['wrap_menu_position'] ? 2 : 80;
-		add_menu_page( __( 'WRAP', 'wrap' ), 'WRAP', 'manage_options', 'wrap', array( self::class, 'options_page' ), 'dashicons-admin-generic', $position );
-		add_submenu_page( 'wrap', __( 'WRAP Settings', 'wrap' ), __( 'Settings', 'wrap' ), 'manage_options', 'wrap', array( self::class, 'options_page' ) );
+		add_submenu_page( 'wrap', __( 'Settings', 'wrap' ), __( 'Settings', 'wrap' ), 'manage_options', 'wrap-settings', array( self::class, 'options_page' ) );
 	}
 
 	public static function settings_init() {
