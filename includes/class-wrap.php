@@ -12,11 +12,18 @@ class Wrap {
     public static function init() {
         // Add actions
         add_action( 'admin_menu', array( __CLASS__, 'add_admin_menu' ) );
-        // add_action( 'init', array( __CLASS__, 'load_textdomain' ) );
+        add_action( 'init', array( __CLASS__, 'load_textdomain' ) );
 
         self::enqueue_style( 'wrap-styles', WRAP_PLUGIN_URL . 'css/styles.css' );
         self::enqueue_style( 'wrap-admin-styles', WRAP_PLUGIN_URL . 'css/admin-styles.css', 'admin_enqueue_scripts' );
         // wp_enqueue_style( 'wrap-admin-styles', WRAP_PLUGIN_URL . 'css/admin-styles.css', array(), '1.0.0' );
+    }
+
+    /**
+     * Load plugin textdomain for translations
+     */
+    public static function load_textdomain() {
+        load_plugin_textdomain( 'wrap', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
     }
 
     public static function get_option( $option_name ) {
