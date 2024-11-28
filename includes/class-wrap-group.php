@@ -16,7 +16,6 @@ class WrapGroup {
 		add_action( 'wrap-group_edit_form_fields', array( self::class, 'edit_group_user_field' ), 10, 2 );
 		add_action( 'edited_wrap-group', array( self::class, 'save_group_user_field' ), 10, 2 );
 		add_action( 'create_wrap-group', array( self::class, 'save_group_user_field' ), 10, 2 );
-		add_action( 'admin_enqueue_scripts', array( self::class, 'enqueue_select2' ) );
 
 		add_filter( 'parent_file', array( self::class, 'set_current_menu' ) );
 
@@ -66,6 +65,7 @@ class WrapGroup {
 	}
 
 	public static function add_group_user_field( $taxonomy ) {
+		Wrap::enqueue_select2();
 		?>
 		<div class="form-field term-wrap-group ">
 			<label for="group_users"><?php _e( 'Allow authentication', 'wrap' ); ?></label>
@@ -82,6 +82,7 @@ class WrapGroup {
 	}
 
 	public static function edit_group_user_field( $term, $taxonomy ) {
+		Wrap::enqueue_select2();
 		WrapAdminSidebar::add_sidebar(
 			array(
 				'main_selector' => 'form.validate',
@@ -122,14 +123,6 @@ class WrapGroup {
 		} else {
 			delete_term_meta( $term_id, 'group_users' );
 		}
-	}
-
-	public static function enqueue_select2() {
-		wp_enqueue_script( 'select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array( 'jquery' ), '4.1.0', true );
-		wp_enqueue_style( 'select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0' );
-	
-		wp_enqueue_style( 'wrap-admin-styles', WRAP_PLUGIN_URL . 'css/admin-styles.css', array(), '1.0.0' );
-		wp_add_inline_script( 'select2', 'jQuery(document).ready(function($) { $(".select2").select2(); });' );
 	}
 
 	/**

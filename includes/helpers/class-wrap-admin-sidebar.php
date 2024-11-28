@@ -33,7 +33,6 @@ class WrapAdminSidebar {
 			return;
 		}
 
-		error_log( 'css url: ' . WRAP_PLUGIN_URL . 'css/admin-sidebar.css' );
 		wp_enqueue_style( 'wrap-admin-sidebar', WRAP_PLUGIN_URL . 'css/admin-sidebar.css', array(), '1.0.0' );
 		wp_enqueue_script( 'wrap-admin-sidebar-script', WRAP_PLUGIN_URL . 'js/admin-sidebar.js', array( 'jquery' ), '1.0.0', true );
 		wp_add_inline_script(
