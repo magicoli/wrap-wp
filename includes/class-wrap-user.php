@@ -163,7 +163,6 @@ class WrapUser {
 	 */
 	public static function get_user_groups() {
 		$user_id = get_current_user_id();
-
 		// If the user is an administrator, return all groups
 		if ( current_user_can( 'manage_options' ) ) {
 			$groups = get_terms(

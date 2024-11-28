@@ -20,11 +20,19 @@ class Wrap {
     }
 
     public static function add_admin_menu() {
-		$options  = get_option( 'wrap_settings' );
-		$position = isset( $options['wrap_menu_position'] ) && $options['wrap_menu_position'] ? 2 : null;
+        $options  = get_option( 'wrap_settings' );
+        $position = isset( $options['wrap_menu_position'] ) && $options['wrap_menu_position'] ? 2 : null;
         $icon_url = 'data:image/svg+xml;base64,' . base64_encode(file_get_contents(WRAP_PLUGIN_DIR . 'icons/gift-solid-menu-color.svg'));
-        add_menu_page( __( 'WRAP', 'wrap' ), 'WRAP', 'manage_options', 'wrap', array( __CLASS__, 'dashboard_page' ), $icon_url, $position );
-        add_submenu_page( 'wrap', __( 'Dashboard', 'wrap' ), __( 'Dashboard', 'wrap' ), 'manage_options', 'wrap', array( __CLASS__, 'dashboard_page' ) );
+
+        // Check if the user is an admin or part of a group
+        if ( ! empty( WrapUser::get_user_groups() ) ) {
+            $capability = 'read';
+        } else {
+            $capability = 'manage_options';
+        }
+        // $capability = 'read';
+        add_menu_page( __( 'WRAP', 'wrap' ), 'WRAP', $capability, 'wrap', array( __CLASS__, 'dashboard_page' ), $icon_url, $position );
+        add_submenu_page( 'wrap', __( 'Dashboard', 'wrap' ), __( 'Dashboard', 'wrap' ), $capability, 'wrap', array( __CLASS__, 'dashboard_page' ) );
     }
 
     public static function dashboard_page() {
