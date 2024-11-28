@@ -210,6 +210,17 @@ class WrapSettings {
             if ($page_id > 0) {
                 $output['profile_page'] = $page_id;
             }
+        } elseif (isset($input['create_default_profile_page']) && $input['create_default_profile_page']) {
+            $page_data = array(
+                'post_title' => 'Profile',
+                'post_content' => '[wrap_user_profile]',
+                'post_status' => 'publish',
+                'post_type' => 'page'
+            );
+            $page_id = wp_insert_post($page_data);
+            if ($page_id && !is_wp_error($page_id)) {
+                $output['profile_page'] = $page_id;
+            }
         }
 
 		$output['wrap_menu_position'] = isset( $input['wrap_menu_position'] ) ? 1 : 0;
@@ -239,15 +250,37 @@ class WrapSettings {
         $selected_page = isset($options['profile_page']) ? $options['profile_page'] : '';
         $pages = self::get_pages_with_shortcode('wrap_user_profile');
         if (empty($pages)) {
-            echo '<p class="description error">' . __('Create a page for profiles and include the shortcode <code>[wrap_user_profile]</code>.', 'magiiic-wrap') . '</p>';
+            ?>
+            <input type='checkbox' name='wrap_settings[create_default_profile_page]' value='1' <?php checked( 1, isset( $options['create_default_profile_page'] ) ? $options['create_default_profile_page'] : 0 ); ?>>
+            <label for='wrap_settings[create_default_profile_page]'>
+                <?php _e('No profile page found. Create a default profile page.', 'magiiic-wrap'); ?></label>
+            <p class="description"><?php _e('Or insert [wrap_user_profile] shortcode in any existing page.', 'magiiic-wrap'); ?></p>
+            <?php
         } else {
         ?>
-        <select name='wrap_settings[profile_page]'>
+        <select name='wrap_settings[profile_page]' id='profile_page_select'>
             <option value=''>-- <?php _e('Select a Profile Page', 'magiiic-wrap'); ?> --</option>
             <?php foreach ($pages as $page) : ?>
                 <option value='<?php echo esc_attr($page->ID); ?>' <?php selected($selected_page, $page->ID); ?>><?php echo esc_html($page->post_title); ?></option>
             <?php endforeach; ?>
         </select>
+        <span id="profile_page_links" style="display: <?php echo $selected_page ? 'inline' : 'none'; ?>;">
+            <a href="<?php echo esc_url(get_permalink($selected_page)); ?>" target="_blank"><?php _e('View', 'magiiic-wrap'); ?></a> |
+            <a href="<?php echo esc_url(get_edit_post_link($selected_page)); ?>" target="_blank"><?php _e('Edit', 'magiiic-wrap'); ?></a>
+        </span>
+        <script>
+            document.getElementById('profile_page_select').addEventListener('change', function() {
+                var selectedPage = this.value;
+                var linksSpan = document.getElementById('profile_page_links');
+                if (selectedPage) {
+                    linksSpan.style.display = 'inline';
+                    linksSpan.querySelector('a[href*="view"]').href = '<?php echo home_url('/'); ?>?p=' + selectedPage;
+                    linksSpan.querySelector('a[href*="edit"]').href = '<?php echo admin_url('post.php?action=edit&post='); ?>' + selectedPage;
+                } else {
+                    linksSpan.style.display = 'none';
+                }
+            });
+        </script>
         <?php
         }
     }
