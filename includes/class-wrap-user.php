@@ -109,9 +109,12 @@ class WrapUser {
 	public static function render_profile_shortcode() {
 		// Ensure the user is logged in
         if (!is_user_logged_in()) {
+			// get value of redirect_to query parameter
+			$redirect_to = isset($_GET['redirect_to']) ? $_GET['redirect_to'] : '';
+
             ob_start();
             wp_login_form([
-                'redirect' => get_permalink(),
+                'redirect' => $redirect_to,
                 'form_id' => 'wrap-login-form',
                 'label_username' => __('Username', 'magiiic-wrap'),
                 'label_password' => __('Password', 'magiiic-wrap'),
