@@ -19,6 +19,11 @@ class Wrap {
         // wp_enqueue_style( 'wrap-admin-styles', WRAP_PLUGIN_URL . 'css/admin-styles.css', array(), '1.0.0' );
     }
 
+    public static function get_option( $option_name ) {
+        $options = get_option( 'wrap_settings' );
+        return isset( $options[$option_name] ) ? $options[$option_name] : null;
+    }
+
     public static function add_admin_menu() {
         $options  = get_option( 'wrap_settings' );
         $position = isset( $options['wrap_menu_position'] ) && $options['wrap_menu_position'] ? 2 : null;
@@ -31,8 +36,12 @@ class Wrap {
             $capability = 'manage_options';
         }
         // $capability = 'read';
-        add_menu_page( __( 'WRAP', 'wrap' ), 'WRAP', $capability, 'wrap', array( __CLASS__, 'dashboard_page' ), $icon_url, $position );
-        add_submenu_page( 'wrap', __( 'Dashboard', 'wrap' ), __( 'Dashboard', 'wrap' ), $capability, 'wrap', array( __CLASS__, 'dashboard_page' ) );
+        if(Wrap::get_option('setup_done')) {
+            add_menu_page( __( 'WRAP', 'wrap' ), 'WRAP', $capability, 'wrap', array( __CLASS__, 'dashboard_page' ), $icon_url, $position );
+            add_submenu_page( 'wrap', __( 'Dashboard', 'wrap' ), __( 'Dashboard', 'wrap' ), $capability, 'wrap', array( __CLASS__, 'dashboard_page' ) );
+        } else {
+            add_menu_page( __( 'WRAP', 'wrap' ), 'WRAP', 'manage_options', 'wrap', array( 'WrapSettings', 'options_page' ), $icon_url, $position );
+        }
     }
 
     public static function dashboard_page() {

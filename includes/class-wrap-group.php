@@ -11,7 +11,9 @@
 class WrapGroup {
 	public static function init() {
 		add_action( 'init', array( self::class, 'create_group_taxonomy' ) );
-		add_action( 'admin_menu', array( self::class, 'add_admin_menu' ) );
+        if(Wrap::get_option('setup_done')) {
+			add_action( 'admin_menu', array( self::class, 'add_admin_menu' ) );
+		}
 		add_action( 'wrap-group_add_form_fields', array( self::class, 'add_group_user_field' ), 10, 2 );
 		add_action( 'wrap-group_edit_form_fields', array( self::class, 'edit_group_user_field' ), 10, 2 );
 		add_action( 'edited_wrap-group', array( self::class, 'save_group_user_field' ), 10, 2 );

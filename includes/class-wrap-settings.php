@@ -14,10 +14,13 @@ class WrapSettings {
 		add_action( 'admin_init', array( self::class, 'settings_init' ) );
 		add_action( 'admin_init', array( self::class, 'restrict_admin_access' ) );
 		add_action( 'after_setup_theme', array( self::class, 'remove_admin_bar' ) );
+		self::initialize_default_options();
 	}
 
 	public static function add_admin_menu() {
-		add_submenu_page( 'wrap', __( 'Settings', 'wrap' ), __( 'Settings', 'wrap' ), 'manage_options', 'wrap-settings', array( self::class, 'options_page' ) );
+        if(Wrap::get_option('setup_done')) {
+            add_submenu_page( 'wrap', __( 'Settings', 'wrap' ), __( 'Settings', 'wrap' ), 'manage_options', 'wrap-settings', array( self::class, 'options_page' ) );
+        }
 	}
 
 	public static function settings_init() {
@@ -178,6 +181,7 @@ class WrapSettings {
 				);
 				update_option( 'wrap_base_url_error', true );
 			}
+            $output['setup_done'] = true;
 		}
 		if ( isset( $input['wrap_base_path_subfolder'] ) ) {
             $document_root = $_SERVER['DOCUMENT_ROOT'];
@@ -308,6 +312,22 @@ class WrapSettings {
 	private static function user_has_only_role( $role ) {
 		$user = wp_get_current_user();
 		return count( $user->roles ) === 1 && in_array( $role, (array) $user->roles );
+	}
+
+	public static function initialize_default_options() {
+		$default_options = array(
+			'wrap_menu_position' => 1,
+			'wrap_base_url' => home_url('/'),
+			'wrap_base_path' => $_SERVER['DOCUMENT_ROOT'],
+		);
+
+		$options = get_option( 'wrap_settings' );
+		if ( $options === false ) {
+			update_option( 'wrap_settings', $default_options );
+		} else {
+			$options = array_merge( $default_options, $options );
+			update_option( 'wrap_settings', $options );
+		}
 	}
 }
 
