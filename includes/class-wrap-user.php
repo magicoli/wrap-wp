@@ -19,11 +19,12 @@ class WrapUser {
 		// Register shortcode for profile page
 		add_shortcode( 'wrap_user_profile', array( self::class, 'render_profile_shortcode' ) );
 		add_action( 'init', array( self::class, 'handle_profile_update' ) );
-        // add_filter( 'login_redirect', [__CLASS__, 'wrap_login_redirect'], 10, 3 );
-        // add_filter('login_url', [__CLASS__, 'override_login_url'], 10, 2);
-        // add_action('login_init', [__CLASS__, 'redirect_wp_login_page']);
 
+		add_filter('login_url', [__CLASS__, 'override_login_url'], 10, 2);
 		add_action( 'template_redirect', array( self::class, 'set_profile_page_title' ) );
+        // add_filter( 'login_redirect', [__CLASS__, 'wrap_login_redirect'], 10, 3 );
+        // add_action('login_init', [__CLASS__, 'redirect_wp_login_page']);
+		
 	}
 
 	static function set_profile_page_title() {
