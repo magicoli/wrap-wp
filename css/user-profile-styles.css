@@ -59,7 +59,7 @@
     width: 11em;
 }
 .wrap-form .regular-text.small:not(:last-child) {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 .wrap-form .regular-text {
     width: 25em;

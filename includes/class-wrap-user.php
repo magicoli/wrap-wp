@@ -96,7 +96,7 @@ class WrapUser {
 						</td>
 					</tr>
 					<tr class="form-field">
-						<th scope="row"><label for="display_name"><?php _e( 'Display name publicly as', 'wrap' ); ?></label></th>
+						<th scope="row"><label for="display_name"><?php _e( 'Display name', 'wrap' ); ?></label></th>
 						<td>
 							<select name="display_name" id="display_name" class="regular-text">
 								<?php
