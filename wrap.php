@@ -36,24 +36,20 @@ define( 'WRAP_VERSION', '1.0.0' );
 define( 'WRAP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WRAP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-function wrap_enqueue_frontend_styles() {
-	wp_enqueue_style( 'wrap-styles', WRAP_PLUGIN_URL . 'css/styles.css', array(), '1.0.3' );
-}
-add_action( 'wp_enqueue_scripts', 'wrap_enqueue_frontend_styles' );
-function wrap_enqueue_admin_styles() {
-	wp_enqueue_style( 'wrap-admin-styles', WRAP_PLUGIN_URL . 'css/admin-styles.css', array(), '1.0.3' );
-}
-add_action( 'admin_enqueue_scripts', 'wrap_enqueue_admin_styles' );
+// Include the main class
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-wrap.php';
 
-// Include classes
+// Include specific classes
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wrap-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wrap-user.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wrap-group.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wrap-auth.php';
 
+// Include helper classes
 require_once plugin_dir_path( __FILE__ ) . 'includes/helpers/class-wrap-admin-sidebar.php';
 
 // Initialise classes
+Wrap::init();
 WrapAdminSidebar::init(); // No really necessary for this class at this time
 WrapSettings::init();
 WrapUser::init();

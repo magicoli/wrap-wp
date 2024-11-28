@@ -2,6 +2,13 @@
 	width: 100% !important;
 }
 
+.form-wrap .select2-container--default .select2-selection {
+	/* width: 100% !important; */
+	/* min-width: 25em; */
+	/* max-width: 100%; */
+}
+
+
 .wrap-input-prefix {
 	white-space: nowrap;
 }

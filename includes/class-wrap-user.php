@@ -23,7 +23,6 @@ class WrapUser {
 		add_filter('login_url', [__CLASS__, 'override_login_url'], 10, 2);
 		add_action( 'template_redirect', array( self::class, 'set_profile_page_title' ) );
         // add_filter( 'login_redirect', [__CLASS__, 'wrap_login_redirect'], 10, 3 );
-        // add_action('login_init', [__CLASS__, 'redirect_wp_login_page']);
 		
 	}
 
@@ -38,79 +37,18 @@ class WrapUser {
 		}
 	}
 
-	static function form_style() {
-		return "<style>
-			#wrap-login-form > p {
-				display: flex;
-			}
-			.wrap-form .form-table th,
-			#wrap-login-form label {
-				vertical-align: top;
-				text-align: left;
-				padding: 20px 10px 20px 0;
-				width: 200px;
-				line-height: 1.3;
-				font-size: 1rem;
-				font-weight: 600;
-			}
-			.wrap-form .form-table td {
-				margin-bottom: 9px;
-				padding: 15px 10px;
-				/* line-height: 1.3; */
-				vertical-align: middle;
-			}
-			.wrap-form input[type=color],
-			.wrap-form input[type=date],
-			.wrap-form input[type=datetime-local],
-			.wrap-form input[type=datetime],
-			.wrap-form input[type=email],
-			.wrap-form input[type=month],
-			.wrap-form input[type=number],
-			.wrap-form input[type=password],
-			.wrap-form input[type=search],
-			.wrap-form input[type=tel],
-			.wrap-form input[type=text],
-			.wrap-form input[type=time],
-			.wrap-form input[type=url],
-			.wrap-form input[type=week],
-			.wrap-form .regular-text,
-			.wrap-form .button,
-			.wrap-form button,
-			.wrap-form input,
-			.wrap-form select,
-			.wrap-form textarea,
-			.wrap-form option,
-			#wrap-login-form input {
-				border-radius: 5px;
-				border-color: rgba(0, 0, 0, .15);
-				color: #373737;
-				font-size: 1rem;
-				padding: 10px;
-				margin: 5px 0;
-				/* padding: 1px 8px; */
-			}
-			.wrap-form .regular-text,
-			.wrap-form .button,
-			#wrap-login-form button {
-				padding: 10px;
-				margin: 5px 0;
-			}
-			.wrap-form .regular-text {
-				width: 25em;
-			}
-		</style>";
-	}
-
 	/**
 	 * Render the user profile shortcode
 	 *
 	 * @return string HTML content for the profile page
 	 */
-	public static function render_profile_shortcode() {
+	public static function render_profile_shortcode() {		
+		Wrap::enqueue_style( 'wrap-user-profile', 'css/user-profile-styles.css' );
+
 		// Ensure the user is logged in
         if (!is_user_logged_in()) {
 			// get value of redirect_to query parameter
-			$redirect_to = isset($_GET['redirect_to']) ? $_GET['redirect_to'] : '';
+			$redirect_to = empty($_GET['redirect_to']) ? get_permalink() : $_GET['redirect_to'];
 
             ob_start();
             wp_login_form([
@@ -122,7 +60,7 @@ class WrapUser {
                 'label_log_in' => __('Log In', 'magiiic-wrap'),
                 'remember' => true
             ]);
-            return self::form_style() . ob_get_clean();
+            return ob_get_clean();
         }
 
 		$user = wp_get_current_user();
@@ -138,7 +76,6 @@ class WrapUser {
 		$wrap_base_url = isset( $options['wrap_base_url'] ) ? $options['wrap_base_url'] : '';
 
 		ob_start();
-		echo self::form_style();
 		?>
 
 		<div class="wrap form wrap-form">
@@ -333,7 +270,6 @@ class WrapUser {
         return null;
     }
 
-
     /**
      * Override the login URL to redirect to the profile page
      *
@@ -348,47 +284,6 @@ class WrapUser {
         }
         return $login_url;
     }
-
-    /**
-     * Rediriger wp-login.php vers la page de profil
-     */
-    static function redirect_wp_login_page() {
-        // Vérifier si on est sur la page de connexion
-        if (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false && !is_user_logged_in()) {
-            $options = get_option('wrap_settings');
-            if (isset($options['profile_page']) && $options['profile_page']) {
-                $profile_page_url = get_permalink($options['profile_page']);
-                if ($profile_page_url) {
-                    wp_redirect($profile_page_url);
-                    exit;
-                }
-            }
-        }
-    }
-
-    /**
-     * Rediriger l'utilisateur vers la page de profil après connexion
-     *
-     * @param string $redirect_to URL de redirection cible.
-     * @param string $requested_redirect_to URL de redirection demandée.
-     * @param WP_User|WP_Error $user Objet WP_User si connexion réussie, WP_Error sinon.
-     * @return string URL de redirection.
-    **/
-    static function wrap_login_redirect( $redirect_to, $requested_redirect_to, $user ) {
-        // Vérifiez si l'utilisateur est connecté avec succès
-        if ( ! is_wp_error( $user ) ) {
-            // Vérifiez si une redirection spécifique est demandée
-            if ( empty( $requested_redirect_to ) || strpos( $requested_redirect_to, 'wp-admin' ) !== false ) {
-                $profile_page_url = self::profile_page_url();
-                if( $profile_page_url ) {
-                    error_log( "Redirecting user to profile page: $profile_page_url" );
-                    return $profile_page_url;
-                }
-            }
-        }
-        return $redirect_to;
-    }
-
 }
 
 // We don't need to call the init() method here as it will be called by the main plugin file

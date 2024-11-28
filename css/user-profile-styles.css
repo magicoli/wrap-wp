@@ -1,0 +1,60 @@
+#wrap-login-form > p {
+    display: flex;
+}
+.wrap-form .form-table th,
+#wrap-login-form label {
+    vertical-align: top;
+    text-align: left;
+    padding: 20px 10px 20px 0;
+    width: 200px;
+    line-height: 1.3;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.wrap-form .form-table td {
+    margin-bottom: 9px;
+    padding: 15px 10px;
+    /* line-height: 1.3; */
+    vertical-align: middle;
+}
+
+.wrap-form input[type=color],
+.wrap-form input[type=date],
+.wrap-form input[type=datetime-local],
+.wrap-form input[type=datetime],
+.wrap-form input[type=email],
+.wrap-form input[type=month],
+.wrap-form input[type=number],
+.wrap-form input[type=password],
+.wrap-form input[type=search],
+.wrap-form input[type=tel],
+.wrap-form input[type=text],
+.wrap-form input[type=time],
+.wrap-form input[type=url],
+.wrap-form input[type=week],
+.wrap-form .regular-text,
+.wrap-form .button,
+.wrap-form button,
+.wrap-form input,
+.wrap-form select,
+.wrap-form textarea,
+.wrap-form option,
+#wrap-login-form input {
+    border-radius: 5px;
+    border-color: rgba(0, 0, 0, .15);
+    color: #373737;
+    font-size: 1rem;
+    padding: 10px;
+    margin: 5px 0;
+    /* padding: 1px 8px; */
+}
+.wrap-form .regular-text,
+.wrap-form .button,
+#wrap-login-form button {
+    padding: 10px;
+    margin: 5px 0;
+}
+.wrap-form .regular-text {
+    width: 25em;
+}
