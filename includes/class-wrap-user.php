@@ -85,8 +85,8 @@ class WrapUser {
 					<tr class="form-field">
 						<th scope="row"><label for="name"><?php _e( 'Name', 'wrap' ); ?></label></th>
 						<td>
-							<input type="text" name="first_name" id="first_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'first_name', true ) ); ?>" class="regular-text" placeholder="<?php _e( 'First Name', 'wrap' ); ?>" />
-							<input type="text" name="last_name" id="last_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'last_name', true ) ); ?>" class="regular-text" placeholder="<?php _e( 'Last Name', 'wrap' ); ?>" />
+							<input type="text" name="first_name" id="first_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'first_name', true ) ); ?>" class="regular-text small" placeholder="<?php _e( 'First Name', 'wrap' ); ?>" />
+							<input type="text" name="last_name" id="last_name" value="<?php echo esc_attr( get_user_meta( $user->ID, 'last_name', true ) ); ?>" class="regular-text small" placeholder="<?php _e( 'Last Name', 'wrap' ); ?>" />
 						</td>
 					</tr>
 					<tr class="form-field">

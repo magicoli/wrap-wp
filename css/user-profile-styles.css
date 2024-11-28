@@ -55,6 +55,12 @@
     padding: 10px;
     margin: 5px 0;
 }
+.wrap-form .regular-text.small {
+    width: 11em;
+}
+.wrap-form .regular-text.small:not(:last-child) {
+    margin-right: 20px;
+}
 .wrap-form .regular-text {
     width: 25em;
 }
