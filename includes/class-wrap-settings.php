@@ -68,32 +68,38 @@ class WrapSettings {
 	public static function base_url_render() {
 		$options = get_option( 'wrap_settings' );
 		$class   = 'regular-text';
+        $form_invalid = '';
 		if ( get_option( 'wrap_base_url_error' ) ) {
 			$class .= ' error';
+            $form_invalid = 'form-invalid form-required';
 		}
 		$home_url = home_url('/');
 		$uri_part = isset($options['wrap_base_url_uri']) ? $options['wrap_base_url_uri'] : '';
 		?>
-        <label>
-            <span class="wrap-input-prefix"><?php echo esc_html( $home_url ); ?></span>
-            <span class="wrap-prefixed-input"><input type='text' name='wrap_settings[wrap_base_url_uri]' value='<?php echo esc_attr( $uri_part ); ?>' class='<?php echo $class; ?>' id='wrap_base_url_uri'>
-        </label>
+        <div  class="<?php echo $form_invalid; ?>">
+            <label>
+                <span class="wrap-input-prefix"><?php echo esc_html( $home_url ); ?></span>
+                <span class="wrap-prefixed-input"><input type='text' name='wrap_settings[wrap_base_url_uri]' value='<?php echo esc_attr( $uri_part ); ?>' class='<?php echo $class; ?>' id='wrap_base_url_uri'>
+            </label>
+        </div>
 		<?php
 	}
 
 	public static function base_path_render() {
 		$options = get_option( 'wrap_settings' );
         $class   = 'regular-text';
+        $form_invalid = '';
 		if ( get_option( 'wrap_base_path_error' ) ) {
             $class .= ' error';
+            $form_invalid = 'form-invalid form-required';
         }
         $document_root = $_SERVER['DOCUMENT_ROOT'];
         $subfolder = isset($options['wrap_base_path_subfolder']) ? $options['wrap_base_path_subfolder'] : '';
         ?>
-        <div class="wrap-path-input">
-            <label>
+        <div class="">
+            <label class="wrap-path-input">
                 <span class="wrap-input-prefix"><?php echo esc_html( "$document_root/" ); ?></span>
-                <input type='text' name='wrap_settings[wrap_base_path_subfolder]' value='<?php echo esc_attr( $subfolder ); ?>' class='<?php echo $class; ?>' id='wrap_base_path_subfolder'>
+                <input type='text' name='wrap_settings[wrap_base_path_subfolder]' value='<?php echo esc_attr( $subfolder ); ?>' class='<?php echo "$class $form_invalid"; ?>' id='wrap_base_path_subfolder'>
             </label>
         </div>
         <script>
@@ -219,7 +225,6 @@ class WrapSettings {
     public static function profile_page_render() {
         $options = get_option('wrap_settings');
         $selected_page = isset($options['profile_page']) ? $options['profile_page'] : '';
-        error_log("Selected page: $selected_page");
         $pages = self::get_pages_with_shortcode('wrap_user_profile');
         if (empty($pages)) {
             echo '<p class="description error">' . __('Create a page for profiles and include the shortcode <code>[wrap_user_profile]</code>.', 'magiiic-wrap') . '</p>';
