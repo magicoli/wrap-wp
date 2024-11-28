@@ -19,34 +19,31 @@ class WrapUser {
 		// Register shortcode for profile page
 		add_shortcode( 'wrap_user_profile', array( self::class, 'render_profile_shortcode' ) );
 		add_action( 'init', array( self::class, 'handle_profile_update' ) );
+        // add_filter( 'login_redirect', [__CLASS__, 'wrap_login_redirect'], 10, 3 );
+        // add_filter('login_url', [__CLASS__, 'override_login_url'], 10, 2);
+        // add_action('login_init', [__CLASS__, 'redirect_wp_login_page']);
+
+		add_action( 'template_redirect', array( self::class, 'set_profile_page_title' ) );
 	}
 
-	/**
-	 * Render the user profile shortcode
-	 *
-	 * @return string HTML content for the profile page
-	 */
-	public static function render_profile_shortcode() {
-		// Ensure the user is logged in
-		if ( ! is_user_logged_in() ) {
-			return '<p>' . __( 'You need to be logged in to view this page.', 'wrap' ) . '</p>';
+	static function set_profile_page_title() {
+		global $post, $query_string, $pagenow, $current_screen;
+		$options = get_option( 'wrap_settings' );
+		$profile_page = isset( $options['profile_page'] ) ? intval( $options['profile_page'] ) : null;
+		if( ! is_user_logged_in() && is_page( $profile_page ) ) {
+			add_filter( 'the_title', function() {
+				return 'Login';
+			});
 		}
+	}
 
-		$user = wp_get_current_user();
-
-		// Check if the form is submitted and display success message
-		if ( isset( $_GET['profile_updated'] ) && $_GET['profile_updated'] == 'true' ) {
-			echo '<div class="wrap"><p>' . __( 'Your profile has been updated successfully.', 'wrap' ) . '</p></div>';
-		}
-
-		// Récupérer les groupes accessibles
-		$groups        = self::get_user_groups();
-		$options       = get_option( 'wrap_settings' );
-		$wrap_base_url = isset( $options['wrap_base_url'] ) ? $options['wrap_base_url'] : '';
-		ob_start();
-		?>
-		<style>
-			.wrap-form .form-table th {
+	static function form_style() {
+		return "<style>
+			#wrap-login-form > p {
+				display: flex;
+			}
+			.wrap-form .form-table th,
+			#wrap-login-form label {
 				vertical-align: top;
 				text-align: left;
 				padding: 20px 10px 20px 0;
@@ -81,7 +78,8 @@ class WrapUser {
 			.wrap-form input,
 			.wrap-form select,
 			.wrap-form textarea,
-			.wrap-form option {
+			.wrap-form option,
+			#wrap-login-form input {
 				border-radius: 5px;
 				border-color: rgba(0, 0, 0, .15);
 				color: #373737;
@@ -91,14 +89,54 @@ class WrapUser {
 				/* padding: 1px 8px; */
 			}
 			.wrap-form .regular-text,
-			.wrap-form .button {
+			.wrap-form .button,
+			#wrap-login-form button {
 				padding: 10px;
 				margin: 5px 0;
 			}
 			.wrap-form .regular-text {
 				width: 25em;
 			}
-		</style>
+		</style>";
+	}
+
+	/**
+	 * Render the user profile shortcode
+	 *
+	 * @return string HTML content for the profile page
+	 */
+	public static function render_profile_shortcode() {
+		// Ensure the user is logged in
+        if (!is_user_logged_in()) {
+            ob_start();
+            wp_login_form([
+                'redirect' => get_permalink(),
+                'form_id' => 'wrap-login-form',
+                'label_username' => __('Username', 'magiiic-wrap'),
+                'label_password' => __('Password', 'magiiic-wrap'),
+                'label_remember' => __('Remember Me', 'magiiic-wrap'),
+                'label_log_in' => __('Log In', 'magiiic-wrap'),
+                'remember' => true
+            ]);
+            return self::form_style() . ob_get_clean();
+        }
+
+		$user = wp_get_current_user();
+
+		// Check if the form is submitted and display success message
+		if ( isset( $_GET['profile_updated'] ) && $_GET['profile_updated'] == 'true' ) {
+			echo '<div class="wrap"><p>' . __( 'Your profile has been updated successfully.', 'wrap' ) . '</p></div>';
+		}
+
+		// Récupérer les groupes accessibles
+		$groups        = self::get_user_groups();
+		$options       = get_option( 'wrap_settings' );
+		$wrap_base_url = isset( $options['wrap_base_url'] ) ? $options['wrap_base_url'] : '';
+
+		ob_start();
+		echo self::form_style();
+		?>
+
 		<div class="wrap form wrap-form">
 			<form method="post" class="form wrap-form wrap-user-profile">
 				<?php wp_nonce_field( 'wrap_user_profile_update', 'wrap_user_profile_nonce' ); ?>
@@ -273,9 +311,80 @@ class WrapUser {
 
 			// Redirect to avoid resubmission
 			wp_redirect( add_query_arg( 'profile_updated', 'true', get_permalink() ) );
-			exit;
-		}
-	}
+            exit;
+        }
+    }
+
+    /**
+     * Get the profile page URL from settings
+     *
+     * @return string|null URL de la page de profil ou null
+     */
+    static function profile_page_url() {
+        $options = get_option( 'wrap_settings' );
+        $profile_page = isset( $options['profile_page'] ) ? intval( $options['profile_page'] ) : null;
+        if ( $profile_page ) {
+            return get_permalink( $profile_page );
+        }
+        return null;
+    }
+
+
+    /**
+     * Override the login URL to redirect to the profile page
+     *
+     * @param string $login_url URL de connexion par défaut.
+     * @param string $redirect URL de redirection.
+     * @return string URL de connexion.
+     */
+    static function override_login_url( $login_url, $redirect ) {
+        $profile_page_url = self::profile_page_url();
+        if ( $profile_page_url ) {
+            return $profile_page_url . '?redirect_to=' . $redirect;
+        }
+        return $login_url;
+    }
+
+    /**
+     * Rediriger wp-login.php vers la page de profil
+     */
+    static function redirect_wp_login_page() {
+        // Vérifier si on est sur la page de connexion
+        if (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false && !is_user_logged_in()) {
+            $options = get_option('wrap_settings');
+            if (isset($options['profile_page']) && $options['profile_page']) {
+                $profile_page_url = get_permalink($options['profile_page']);
+                if ($profile_page_url) {
+                    wp_redirect($profile_page_url);
+                    exit;
+                }
+            }
+        }
+    }
+
+    /**
+     * Rediriger l'utilisateur vers la page de profil après connexion
+     *
+     * @param string $redirect_to URL de redirection cible.
+     * @param string $requested_redirect_to URL de redirection demandée.
+     * @param WP_User|WP_Error $user Objet WP_User si connexion réussie, WP_Error sinon.
+     * @return string URL de redirection.
+    **/
+    static function wrap_login_redirect( $redirect_to, $requested_redirect_to, $user ) {
+        // Vérifiez si l'utilisateur est connecté avec succès
+        if ( ! is_wp_error( $user ) ) {
+            // Vérifiez si une redirection spécifique est demandée
+            if ( empty( $requested_redirect_to ) || strpos( $requested_redirect_to, 'wp-admin' ) !== false ) {
+                $profile_page_url = self::profile_page_url();
+                if( $profile_page_url ) {
+                    error_log( "Redirecting user to profile page: $profile_page_url" );
+                    return $profile_page_url;
+                }
+            }
+        }
+        return $redirect_to;
+    }
+
 }
 
 // We don't need to call the init() method here as it will be called by the main plugin file
